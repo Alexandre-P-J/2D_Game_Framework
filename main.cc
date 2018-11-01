@@ -10,47 +10,44 @@
 int main() {
 	int SizeX = 2048;
 	int SizeY = 1024;
-	
 	bool quit = false;
 	bool term_output = false;
 	const int max_fps = 144;
 
-
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 	IMG_Init(IMG_INIT_PNG);
-
 	SDL_Window* Window;
 	SDL_Renderer* Renderer;
 	SDL_CreateWindowAndRenderer(SizeX, SizeY, 0, &Window, &Renderer);
+	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
 
 	SDL_Texture* texture = IMG_LoadTexture(Renderer, "sprite.png");
 
-	SDL_SetRenderDrawColor(Renderer, 168, 230, 255, 255);
 	/*
 	ObjectManager Test;
 	std::unique_ptr<Object> P = std::make_unique<Player>();
 	Test.Add(P);
 	*/
 	// TESTING BGN
-	
-	
+
+
 	// TESTING END
 
 	while (!quit) {
 		auto frame_start = std::chrono::steady_clock::now();
-		
+
 		int seconds = SDL_GetTicks()/1000;
 		int sprite = seconds % 4;
-		
+
 
 		//TESTING BGN
-		
+
 
 		//TESTING END
 
 
 
-		
+
 		SDL_Rect srcrect = { sprite * 32, 0, 32, 64 };
         SDL_Rect dstrect = { 10, 10, 32, 64 };
 
@@ -59,7 +56,7 @@ int main() {
 		// Render
 		/*Test.Run();*/
 		SDL_RenderPresent(Renderer);
-	
+
 
 
 
@@ -80,11 +77,10 @@ int main() {
 
 
 
-	
+
 		// Log
 		if (term_output)
 			std::cout << "\r\033[K" << 1000/frame_timelength.count() << " FPS" << std::flush;
-		
 
 
 
@@ -92,7 +88,8 @@ int main() {
 
 
 
-	
+
+
 		// Handle Events
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
@@ -109,7 +106,7 @@ int main() {
 							break;
 					}
 					break;
-			
+
 				case SDL_KEYDOWN:
 					switch (((event.key).keysym).sym) {
 						case SDLK_UP:
