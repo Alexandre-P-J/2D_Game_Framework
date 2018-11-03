@@ -1,6 +1,6 @@
 all: program
 
-obj=main.o Object.o ObjectManager.o Player.o
+obj=main.o Object.o ObjectManager.o Player.o Map.o
 flags=-lSDL2 -lSDL2_image
 
 program: ${obj}
@@ -13,6 +13,8 @@ ObjectManager.o: ObjectManager.cc
 	g++ ${flags} -c ObjectManager.cc -I .
 Player.o: Player.cc
 	g++ ${flags} -c Player.cc -I .
+Map.o: Map.cc
+	g++ ${flags} -c Map.cc -I .
 rb: clean all
 
 clean:

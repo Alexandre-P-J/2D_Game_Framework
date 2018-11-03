@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include <memory>
 #include "Player.h"
+#include "Map.h"
 
 int main() {
 	int SizeX = 2048;
@@ -29,7 +30,10 @@ int main() {
 	Test.Add(P);
 	*/
 	// TESTING BGN
-
+	Map MyMap("Map.tmx");
+	auto Level = MyMap.getLevel(0);
+	for (int i = 0; i < (Level->Tiles).size(); ++i)
+		std::cout << (Level->Tiles)[i] << std::endl;
 
 	// TESTING END
 
