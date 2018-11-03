@@ -7,7 +7,7 @@
 #include <memory>
 #include "Player.h"
 #include "Map.h"
-
+#include "MediaLoader.h"
 int main() {
 	int SizeX = 2048;
 	int SizeY = 1024;
@@ -19,10 +19,11 @@ int main() {
 	IMG_Init(IMG_INIT_PNG);
 	SDL_Window* Window;
 	SDL_Renderer* Renderer;
+
 	SDL_CreateWindowAndRenderer(SizeX, SizeY, 0, &Window, &Renderer);
+	MediaLoader ML(Renderer);
 	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
 
-	SDL_Texture* texture = IMG_LoadTexture(Renderer, "sprite.png");
 
 	/*
 	ObjectManager Test;
@@ -30,10 +31,19 @@ int main() {
 	Test.Add(P);
 	*/
 	// TESTING BGN
-	Map MyMap("Map.tmx");
-	auto Level = MyMap.getLevel(0);
-	for (int i = 0; i < (Level->Tiles).size(); ++i)
-		std::cout << (Level->Tiles)[i] << std::endl;
+	//SDL_Texture* texture = ML.GetTexture("sprite.png");
+
+	//TODO:::
+
+	// ML.GetTexture retorna nullptr!!!? tmb se jode la destructora por que no puede destruir nullptr?
+
+
+	auto texture = ML.GetTexture("sprite.png");
+	
+	//Map MyMap("Map.tmx");
+	//auto Level = MyMap.getLevel(0);
+	//for (int i = 0; i < (Level->Tiles).size(); ++i)
+	//	std::cout << (Level->Tiles)[i] << std::endl;
 
 	// TESTING END
 

@@ -1,6 +1,6 @@
 all: program
 
-obj=main.o Object.o ObjectManager.o Player.o Map.o
+obj=main.o Object.o ObjectManager.o Player.o Map.o MediaLoader.o
 flags=-lSDL2 -lSDL2_image
 
 program: ${obj}
@@ -15,6 +15,11 @@ Player.o: Player.cc
 	g++ ${flags} -c Player.cc -I .
 Map.o: Map.cc
 	g++ ${flags} -c Map.cc -I .
+MediaLoader.o: MediaLoader.cc
+	g++ ${flags} -c MediaLoader.cc -I .
+
+run: program
+	./program
 rb: clean all
 
 clean:
