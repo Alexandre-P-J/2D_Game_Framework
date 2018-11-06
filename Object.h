@@ -1,9 +1,10 @@
 #pragma once
-#include "Vector3D.h"
+#include "ExtraTypes.h"
 
 class Object {
-		Vector3D position;
+		Position P;
 		bool visible = true;
 	public:
 		virtual void Update();
+		const Position& GetPosition() const;
 };

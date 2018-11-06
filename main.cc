@@ -7,7 +7,11 @@
 #include <memory>
 #include "Player.h"
 #include "Map.h"
-#include "MediaLoader.h"
+#include "RenderScheduler.h"
+#include "Camera.h"
+#include "ExtraTypes.h"
+
+
 int main() {
 	int SizeX = 2048;
 	int SizeY = 1024;
@@ -21,9 +25,8 @@ int main() {
 	SDL_Renderer* Renderer;
 
 	SDL_CreateWindowAndRenderer(SizeX, SizeY, 0, &Window, &Renderer);
-	MediaLoader ML(Renderer);
+	RenderScheduler RS(Renderer, 32);
 	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
-
 
 	/*
 	ObjectManager Test;
@@ -31,47 +34,26 @@ int main() {
 	Test.Add(P);
 	*/
 	// TESTING BGN
-	//SDL_Texture* texture = ML.GetTexture("sprite.png");
 
-	//TODO:::
+	Map MyMap("Map.tmx", &RS);
+	Position P = std::make_tuple(0,0,0);
+	Camera cam(P, 64, 512);
 
-	// ML.GetTexture retorna nullptr!!!? tmb se jode la destructora por que no puede destruir nullptr?
-
-
-	auto texture = ML.GetTexture("sprite.png");
-	
-	//Map MyMap("Map.tmx");
-	//auto Level = MyMap.getLevel(0);
-	//for (int i = 0; i < (Level->Tiles).size(); ++i)
-	//	std::cout << (Level->Tiles)[i] << std::endl;
-
-	// TESTING END
 
 	while (!quit) {
 		auto frame_start = std::chrono::steady_clock::now();
 
-		int seconds = SDL_GetTicks()/1000;
-		int sprite = seconds % 4;
+		//int seconds = SDL_GetTicks()/1000;
+		//int sprite = seconds % 4;
 
+		//SDL_Rect srcrect = { 0, 0, 32, 32 };
+        //SDL_Rect dstrect = { 0, 0, 32, 32 };
 
-		//TESTING BGN
+		MyMap.Update(cam);
 
-
-		//TESTING END
-
-
-
-
-		SDL_Rect srcrect = { sprite * 32, 0, 32, 64 };
-        SDL_Rect dstrect = { 10, 10, 32, 64 };
-
-		SDL_RenderClear(Renderer);
-		SDL_RenderCopy(Renderer, texture, &srcrect, &dstrect);
-		// Render
-		/*Test.Run();*/
+		RS.Draw();
 		SDL_RenderPresent(Renderer);
-
-
+		SDL_RenderClear(Renderer);
 
 
 

@@ -1,6 +1,6 @@
 all: program
 
-obj=main.o Object.o ObjectManager.o Player.o Map.o MediaLoader.o
+obj=main.o Object.o ObjectManager.o Player.o Map.o RenderScheduler.o Camera.o
 flags=-lSDL2 -lSDL2_image
 
 program: ${obj}
@@ -15,8 +15,10 @@ Player.o: Player.cc
 	g++ ${flags} -c Player.cc -I .
 Map.o: Map.cc
 	g++ ${flags} -c Map.cc -I .
-MediaLoader.o: MediaLoader.cc
-	g++ ${flags} -c MediaLoader.cc -I .
+RenderScheduler.o: RenderScheduler.cc
+	g++ ${flags} -c RenderScheduler.cc -I .
+Camera.o: Camera.cc
+	g++ ${flags} -c Camera.cc -I .
 
 run: program
 	./program
@@ -25,3 +27,4 @@ rb: clean all
 clean:
 	rm -f program
 	rm -f *.o
+	rm -f *.gch

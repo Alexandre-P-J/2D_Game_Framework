@@ -5,8 +5,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
-
+#include "RenderScheduler.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
 
 using namespace rapidxml;
 
@@ -33,14 +34,13 @@ int stosi(const std::string& str) {//string to signed integer
 	return i*sign;
 }
 
-Map::Map(const std::string& MapFile) {
+Map::Map(const std::string& MapFile, RenderScheduler* const RS) : RS(RS) {
 	Reload(MapFile);
 }
 
 void Map::Reload(const std::string& MapFile) {
 	//Dealocate (Reduce mem usage peak)
 	Levels = std::vector<Level>();
-	Tilesets = std::unordered_map<int, std::string>();
 
 	//Loading MapFile
 	xml_document<> doc;
@@ -52,6 +52,10 @@ void Map::Reload(const std::string& MapFile) {
 	doc.parse<0>(&content[0]);
 	xml_node<>* pRoot = doc.first_node();
 	xml_node<>* pNode;
+
+
+	std::string TexPath = (pRoot->first_node("tileset")->first_node("image")->first_attribute("source"))->value();
+	MapSpriteSheet = RS->GetTexture(TexPath);
 
 
 	//Updating variables
@@ -96,12 +100,49 @@ void Map::Reload(const std::string& MapFile) {
 	}
 }
 
-
-
-std::unordered_map<int, std::string>* Map::getGidToName() {
-	return &Tilesets;
+SDL_Texture* Map::getMapSpriteSheet() {
+	return MapSpriteSheet;
 }
 
-Level* Map::getLevel(int Level) {
+Level* Map::getLevel(const int Level) {
 	return &Levels[Level-minLevel]; //vectors do not accept negative index
+}
+
+void Map::idToSprite(int id, SDL_Texture*& texture, SDL_Rect& srcrect) {
+	if (id < 1)
+		id = 1;
+	texture = MapSpriteSheet; //MODIFY THIS FOR MULTIPLE TEXTURE SUPPORT
+	int w, h;
+	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+	int x0 = ((id-1)%w)*32;
+	int y0 = ((id-1)/w)*32;
+	srcrect = {x0, y0, x0+32, y0+32};
+}
+
+void Map::Update(const Camera& cam) {
+	auto Height = (cam.Get()).VisionHeight;
+	auto Width = (cam.Get()).VisionWidth;
+	auto x = std::get<0>((cam.Get()).P);
+	auto y = std::get<1>((cam.Get()).P);
+	auto z = std::get<2>((cam.Get()).P);
+
+	for (int i = x; i < Width; i += 32) {
+		int id = (Levels[0].Tiles)[i/32];
+		std::cout << Width << std::endl;
+		int w, h;
+		SDL_Texture* texture;
+		SDL_Rect srcrect;
+		idToSprite(id, texture, srcrect);
+
+		SDL_Rect dstrect = { i, 0, i+32, 32 };
+		RS->ScheduleDraw(0, texture, srcrect, dstrect);
+	}
+
+	/*
+	for (int i = 0; i < 5; ++i) {
+		SDL_Rect srcrect = { 0, 0, 32*i, 32 };
+		SDL_Rect dstrect = { 0, 0, 32*i, 32 };
+		RS->ScheduleDraw(0, MapSpriteSheet, srcrect, dstrect);
+	}
+	*/
 }
