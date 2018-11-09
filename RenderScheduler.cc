@@ -1,8 +1,9 @@
 #include "RenderScheduler.h"
 #include <iostream>
+#include <utility>
 
-RenderScheduler::RenderScheduler(SDL_Renderer* Renderer, int maxPriorities) :
-	Renderer(Renderer), PQueue(maxPriorities) {}
+RenderScheduler::RenderScheduler(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities) :
+	Renderer(Renderer), Window(Window), PQueue(maxPriorities) {}
 
 RenderScheduler::~RenderScheduler() {
 	auto it = Textures.begin();
@@ -73,4 +74,10 @@ void RenderScheduler::Draw() {
 
 unsigned int RenderScheduler::getTaskNum() {
 	return TaskNum;
+}
+
+inline std::pair<int,int> RenderScheduler::getWindowSize() {
+	std::pair<int,int> WS;
+	SDL_GetWindowSize(Window, &WS.first, &WS.second);
+	return WS;
 }

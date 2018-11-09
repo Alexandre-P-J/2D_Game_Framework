@@ -25,7 +25,7 @@ int main() {
 	SDL_Renderer* Renderer;
 
 	SDL_CreateWindowAndRenderer(SizeX, SizeY, 0, &Window, &Renderer);
-	RenderScheduler RS(Renderer, 32);
+	RenderScheduler RS(Renderer, Window, 32);
 	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
 
 	/*

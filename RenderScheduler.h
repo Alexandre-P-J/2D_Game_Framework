@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include <queue>
+#include <utility>
 
 class RenderScheduler {
 		struct RenderTask {
@@ -25,9 +26,10 @@ class RenderScheduler {
 		unsigned int TaskNum = 0;
 		std::unordered_map<std::string, SDL_Texture* const> Textures;
 		SDL_Renderer* const Renderer;
+		SDL_Window* const Window;
 
 	public:
-		RenderScheduler(SDL_Renderer* Renderer, int maxPriorities);
+		RenderScheduler(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
 
 		~RenderScheduler();
 
@@ -41,6 +43,8 @@ class RenderScheduler {
 		  const SDL_Rect srcrect, const SDL_Rect dstrect);
 
 		void Draw();
+
+		inline std::pair<int,int> getWindowSize();
 
 		unsigned int getTaskNum();
 };
