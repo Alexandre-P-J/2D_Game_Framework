@@ -36,8 +36,8 @@ int main() {
 	// TESTING BGN
 
 	Map MyMap("Map.tmx", &RS);
-	Position P = std::make_tuple(0,0,0);
-	Camera cam(P, 64, 512);
+	Position P = std::make_tuple(32,0,-1);
+	Camera cam(P, SizeX, SizeY, 2);
 
 
 	while (!quit) {

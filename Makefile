@@ -1,7 +1,10 @@
+rebuild: clean
+	make all
+
 all: program
 
 obj=main.o Object.o ObjectManager.o Player.o Map.o RenderScheduler.o Camera.o
-flags=-lSDL2 -lSDL2_image
+flags=-lSDL2 -lSDL2_image -g
 
 program: ${obj}
 	g++ ${flags} ${obj} -o program
@@ -19,10 +22,6 @@ RenderScheduler.o: RenderScheduler.cc
 	g++ ${flags} -c RenderScheduler.cc -I .
 Camera.o: Camera.cc
 	g++ ${flags} -c Camera.cc -I .
-
-run: program
-	./program
-rb: clean all
 
 clean:
 	rm -f program

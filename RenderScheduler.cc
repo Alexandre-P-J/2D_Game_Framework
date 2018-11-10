@@ -76,7 +76,7 @@ unsigned int RenderScheduler::getTaskNum() {
 	return TaskNum;
 }
 
-inline std::pair<int,int> RenderScheduler::getWindowSize() {
+std::pair<int,int> RenderScheduler::getWindowSize() {
 	std::pair<int,int> WS;
 	SDL_GetWindowSize(Window, &WS.first, &WS.second);
 	return WS;

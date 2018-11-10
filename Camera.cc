@@ -2,10 +2,11 @@
 #include "Map.h"
 #include "ExtraTypes.h"
 
-Camera::Camera(Position P, int width, int height) {
+Camera::Camera(const Position& P, int HorizontalPx, int VerticalPx, float Zoom) {
 	Info.P = P;
-	Info.VisionHeight = height;
-	Info.VisionWidth = width;
+	Info.HorizontalPx = HorizontalPx;
+	Info.VerticalPx = VerticalPx;
+	Info.Zoom = Zoom;
 }
 
 const Camera::Data& Camera::Get() const {
@@ -17,11 +18,11 @@ bool Camera::CanSeeObject(const Object& Obj) {
 	if (std::get<2>(ObjPos) != std::get<2>(Info.P))
 		return false;
 	else if (std::get<0>(ObjPos) < std::get<0>(Info.P) ||
-		std::get<0>(ObjPos) > std::get<0>(Info.P) + Info.VisionWidth) {
+		std::get<0>(ObjPos) > std::get<0>(Info.P) + Info.HorizontalPx) {
 		return false;
 	}
 	else if (std::get<1>(ObjPos) > std::get<1>(Info.P) ||
-		std::get<1>(ObjPos) < std::get<1>(Info.P) - Info.VisionHeight) {
+		std::get<1>(ObjPos) < std::get<1>(Info.P) - Info.VerticalPx) {
 		return false;
 	}
 	return true;

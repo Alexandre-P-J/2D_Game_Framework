@@ -44,7 +44,7 @@ class RenderScheduler {
 
 		void Draw();
 
-		inline std::pair<int,int> getWindowSize();
+		std::pair<int,int> getWindowSize();
 
 		unsigned int getTaskNum();
 };

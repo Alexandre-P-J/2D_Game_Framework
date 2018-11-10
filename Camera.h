@@ -5,12 +5,13 @@
 class Camera {
 		struct Data {
 			Position P;
-			int VisionHeight;
-			int VisionWidth;
+			unsigned int HorizontalPx;
+			unsigned int VerticalPx;
+			float Zoom = 1;
 		};
 		Data Info;
 	public:
-		Camera(Position P, int VisionWidth, int VisionHeight);
+		Camera(const Position& P, int HorizontalPx, int VerticalPx, float Zoom);
 		const Data& Get() const;
 		bool CanSeeObject(const Object& Obj);
 		void Update();
