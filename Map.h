@@ -34,10 +34,10 @@ class Map {
 
 	std::vector<Level> Levels;
 	int minLevel;
-	RenderScheduler* const RS;
 
 	public:
-	Map(const std::string& MapFile, RenderScheduler* RS);
+	Map();
+	Map(const std::string& MapFile);
 	void Reload(const std::string& MapFile);
 
 	Level* getLevel (const int Level);

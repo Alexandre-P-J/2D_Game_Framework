@@ -13,26 +13,42 @@
 #include "Event.h"
 #include "Engine.h"
 
+void foo() {
+	std::cout << "HELLO" << std::endl;
+}
 
 int main() {
+
+
+
+	bool quit = false;
+	bool term_output = true;
+	const int max_fps = 144;
+
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 	IMG_Init(IMG_INIT_PNG);
 	SDL_Window* Window;
 	SDL_Renderer* Renderer;
 	SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_RESIZABLE, &Window, &Renderer);
-	//Engine Engine(Window, Renderer);
-	Engine* Engine = Engine::Construct(Window, Renderer);
-	Engine->Run();
+	RenderScheduler RS(Renderer, Window, 32);
+	SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
 
-	SDL_DestroyRenderer(Renderer);
-	SDL_DestroyWindow(Window);
-	SDL_Quit();
-/*
+	/*
+	ObjectManager Test;
+	std::unique_ptr<Object> P = std::make_unique<Player>();
+	Test.Add(P);
+	*/
+	// TESTING BGN
+	SDL_SetWindowResizable(Window, SDL_TRUE);
+	Event E;
+	E.Bind(foo);
+	E();
+
 	Map MyMap("Map.tmx", &RS);
 	Position P = std::make_tuple(32,0,-1);
 	Camera cam(P, SizeX, SizeY, 2);
-*/
-/*
+
+
 	while (!quit) {
 		auto frame_start = std::chrono::steady_clock::now();
 
@@ -68,7 +84,8 @@ int main() {
 
 
 		// Log
-		//std::cout << "\r\033[K" << 1000/frame_timelength.count() << " FPS" << std::flush;
+		if (term_output)
+			std::cout << "\r\033[K" << 1000/frame_timelength.count() << " FPS" << std::flush;
 
 
 
@@ -110,5 +127,4 @@ int main() {
 			}
 		}
 	}
-	*/
 }

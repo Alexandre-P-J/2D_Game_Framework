@@ -2,15 +2,13 @@
 #include <rapidxml/rapidxml.hpp>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <vector>
 #include <string>
-#include "RenderScheduler.h"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
-#include <map>
 #include <tuple>
 #include <algorithm>
+#include "EngineUtils.h"
 
 using namespace rapidxml;
 
@@ -51,8 +49,9 @@ template<typename T> int PromiscuousBinSearch(const std::vector<T>& V, const T& 
 	return low;
 }
 
+Map::Map() {}
 
-Map::Map(const std::string& MapFile, RenderScheduler* const RS) : RS(RS) {
+Map::Map(const std::string& MapFile) {
 	Reload(MapFile);
 }
 
@@ -71,6 +70,7 @@ void Map::Reload(const std::string& MapFile) {
 	std::string content(buffer.str());
 	doc.parse<0>(&content[0]);
 	xml_node<>* pRoot = doc.first_node();
+	auto RS = getRenderScheduler();
 
 	//Parsing Tileset (Texture->tile info) : UBoundTexture vector
 	xml_node<>* pNode0 = pRoot->first_node("tileset");
@@ -187,6 +187,7 @@ Level* Map::getLevel(const int Level) {
 
 
 void Map::Update(const Camera& cam) {
+	auto RS = getRenderScheduler();
 	float Zoom = (cam.Get()).Zoom;
 	//Tile
 	int Tdim = 32*Zoom; //EVERY MAP TILE SHALL BE 32X32 IN TEXTURE!!!

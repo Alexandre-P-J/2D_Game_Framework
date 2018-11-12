@@ -3,7 +3,7 @@ rebuild: clean
 
 all: program
 
-obj=main.o Object.o ObjectManager.o Player.o Map.o RenderScheduler.o Camera.o
+obj=main.o Object.o ObjectManager.o Player.o Map.o RenderScheduler.o Camera.o Event.o Engine.o Game.o
 flags=-lSDL2 -lSDL2_image -g
 
 program: ${obj}
@@ -22,7 +22,12 @@ RenderScheduler.o: RenderScheduler.cc
 	g++ ${flags} -c RenderScheduler.cc -I .
 Camera.o: Camera.cc
 	g++ ${flags} -c Camera.cc -I .
-
+Event.o: Event.cc
+	g++ ${flags} -c Event.cc -I .
+Engine.o: Engine.cc
+	g++ ${flags} -c Engine.cc -I .
+Game.o: Game.cc
+		g++ ${flags} -c Game.cc -I .
 clean:
 	rm -f program
 	rm -f *.o
