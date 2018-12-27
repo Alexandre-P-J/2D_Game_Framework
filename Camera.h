@@ -11,8 +11,9 @@ class Camera {
 		};
 		Data Info;
 	public:
+		Camera();
 		Camera(const Position& P, int HorizontalPx, int VerticalPx, float Zoom);
 		const Data& Get() const;
 		bool CanSeeObject(const Object& Obj);
-		void Update();
+		void Update(const Position PlayerPos, int HorizontalPx, int HorizontalPy, uint32_t MapWidth, uint32_t MapHeight);
 };

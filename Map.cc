@@ -8,7 +8,9 @@
 #include "SDL2/SDL_image.h"
 #include <tuple>
 #include <algorithm>
-#include "EngineUtils.h"
+#include "Engine.h"
+#include <iostream>
+#include <cassert>
 
 using namespace rapidxml;
 
@@ -70,7 +72,7 @@ void Map::Reload(const std::string& MapFile) {
 	std::string content(buffer.str());
 	doc.parse<0>(&content[0]);
 	xml_node<>* pRoot = doc.first_node();
-	auto RS = getRenderScheduler();
+	auto RS = Engine::getRenderScheduler();
 
 	//Parsing Tileset (Texture->tile info) : UBoundTexture vector
 	xml_node<>* pNode0 = pRoot->first_node("tileset");
@@ -179,55 +181,42 @@ void Map::Reload(const std::string& MapFile) {
 }
 
 
+std::pair<uint32_t,uint32_t> Map::getLevelSize(int LevelID) const {
+	LevelID -= minLevel;
+	return std::make_pair(Levels[LevelID].Width*32, Levels[LevelID].Height*32);
+}
 
 
 Level* Map::getLevel(const int Level) {
 	return &Levels[Level-minLevel]; //vectors do not accept negative index
 }
 
+bool Map::LevelExists(const int Level) {
+	int index = Level - minLevel;
+	return (!(index < 0 || index >= Levels.size()));
+}
 
-void Map::Update(const Camera& cam) {
-	auto RS = getRenderScheduler();
+void Map::Update() {
+	auto RS = Engine::getRenderScheduler();
+	Camera cam = *(RS->GetViewport());
 	float Zoom = (cam.Get()).Zoom;
 	//Tile
 	int Tdim = 32*Zoom; //EVERY MAP TILE SHALL BE 32X32 IN TEXTURE!!!
 	// Camera:
 	int HorizontalPx = (cam.Get()).HorizontalPx + Tdim;
-	int VerticalPx = (cam.Get()).VerticalPx + Tdim;
+	int VerticalPx = (cam.Get()).VerticalPx + Tdim*2;
 	int x = std::get<0>((cam.Get()).P)*Zoom; //Position from top left
 	int y = std::get<1>((cam.Get()).P)*Zoom;
 	int Level = std::get<2>((cam.Get()).P) - minLevel;
+	assert(Level >= 0 && Level < Levels.size());
 	//Map
 	int MapWidth = Levels[Level].Width;
-	//Screen:
-	auto Res = RS->getWindowSize();
-	int ScreenWidth = Res.first;
-	int ScreenHeight = Res.second;
+
 
 	for (int i = y/Tdim; i < (y+VerticalPx)/Tdim; ++i)
 		for (int j = x/Tdim; j < (x+HorizontalPx)/Tdim; ++j) {
 			int index = j + i*MapWidth;
-			SDL_Rect dstrect = {(j*Tdim)-x, (i*Tdim)-i, Tdim, Tdim};
+			SDL_Rect dstrect = {(j*Tdim)-x, (i*Tdim)-y, Tdim, Tdim};
 			RS->ScheduleDraw(1, Levels[Level].Tiles[index].Texture, Levels[Level].Tiles[index].SrcRect, dstrect);
 		}
 }
-/*
-void Map::Update(const Camera& cam) {
-	auto Width = (cam.Get()).HorizontalUnits; //in world sizes
-	auto x = std::get<0>((cam.Get()).P); //Position from top left
-	auto y = std::get<1>((cam.Get()).P);
-	auto z = std::get<2>((cam.Get()).P) - minLevel;
-	auto Res = RS->getWindowSize();
-	int StileSize = Res.first / Width + 1;
-	int Height = Res.second / StileSize;
-	for (int i = y; i < StileSize*Height-y; i += StileSize)
-		for (int j = x; j < StileSize*Width-x; j += StileSize) {
-			SDL_Rect dstrect = {j, i, StileSize, StileSize};
-			int index = (j/StileSize) + i;
-			RS->ScheduleDraw(1, Levels[z].Tiles[index].Texture, Levels[z].Tiles[index].SrcRect, dstrect);
-			std::cout << j << ' ' << i << ' ' << StileSize << ' ' << StileSize << std::endl;
-		}
-	//while(1);
-
-}
-*/

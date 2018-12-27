@@ -22,7 +22,7 @@ struct MapObject {
 };
 
 struct Level {
-	unsigned int Width, Height;
+	uint32_t Width, Height;
 	//std::vector<std::tuple<SDL_Texture*, int8_t, int8_t>> Tiles; //ptr,x,y
 	std::vector<MapTile> Tiles;
 	std::vector<MapObject> Objects;
@@ -31,16 +31,16 @@ struct Level {
 
 
 class Map {
-
-	std::vector<Level> Levels;
-	int minLevel;
-
+		std::vector<Level> Levels;
+		int minLevel;
 	public:
-	Map();
-	Map(const std::string& MapFile);
-	void Reload(const std::string& MapFile);
+		Map();
+		Map(const std::string& MapFile);
+		void Reload(const std::string& MapFile);
 
-	Level* getLevel (const int Level);
+		void Update();
 
-	void Update(const Camera& cam);
+		std::pair<uint32_t,uint32_t> getLevelSize(int const LevelID) const;
+		Level* getLevel (const int Level);
+		bool LevelExists(const int Level);
 };

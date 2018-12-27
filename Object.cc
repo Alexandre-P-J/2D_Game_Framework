@@ -1,6 +1,8 @@
 #include "Object.h"
 
-void Object::Update() {}
+bool Object::Update() {
+	return false;
+}
 
 const Position& Object::GetPosition() const {
 	return P;

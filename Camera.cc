@@ -1,6 +1,14 @@
 #include "Camera.h"
 #include "Map.h"
 #include "ExtraTypes.h"
+#include <iostream>
+
+Camera::Camera() {
+	Info.P = Position(0, 0, -1);
+	Info.HorizontalPx = 0;
+	Info.VerticalPx = 0;
+	Info.Zoom = 1;
+}
 
 Camera::Camera(const Position& P, int HorizontalPx, int VerticalPx, float Zoom) {
 	Info.P = P;
@@ -8,6 +16,7 @@ Camera::Camera(const Position& P, int HorizontalPx, int VerticalPx, float Zoom) 
 	Info.VerticalPx = VerticalPx;
 	Info.Zoom = Zoom;
 }
+
 
 const Camera::Data& Camera::Get() const {
 	return Info;
@@ -28,6 +37,19 @@ bool Camera::CanSeeObject(const Object& Obj) {
 	return true;
 }
 
-void Camera::Update() {
-	//Do Something?
+
+void Camera::Update(const Position PlayerPos, int HorizontalPx, int VerticalPx, uint32_t MapWidthpx, uint32_t MapHeightpx) {
+	Info.HorizontalPx = HorizontalPx;
+	Info.VerticalPx = VerticalPx;
+	int y = std::get<1>(PlayerPos) - (VerticalPx/2);
+	if (y < 0)
+		y = 0;
+	if (y+VerticalPx >= MapHeightpx-64)
+		y = MapHeightpx-VerticalPx-64;
+	int x = std::get<0>(PlayerPos) - (HorizontalPx/2);
+	if (x < 0)
+		x = 0;
+	if (x+HorizontalPx >= MapWidthpx-32)
+		x = MapWidthpx-HorizontalPx-32;
+	Info.P = std::make_tuple(x, y, std::get<2>(PlayerPos));
 }

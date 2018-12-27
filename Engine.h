@@ -1,30 +1,37 @@
 #pragma once
 #include "RenderScheduler.h"
 #include "Game.h"
+#include "Input.h"
+#include "ExtraTypes.h"
+#include <chrono>
 
-
-class Engine { //SINGLETON
-	struct Info {
-		int WsizeX = 2048;
-		int WsizeY = 1024;
-		int FPSlimit = 144;
-	};
+class Engine {
 	static Engine* instance;
-	Info config;
-	SDL_Window* const Window;
-	SDL_Renderer* const Renderer;
-	RenderScheduler* const RS;
-	Game* GamePtr; //Game could be changed in runtime
+	// ENGINE COMPONENTS:
+	RenderScheduler* const RenderComponent;
+	Game* GameComponent;
+	Input* const InputComponent;
 
+	// RUNTIME INFO:
+	bool Running = true;
+	EngineConfig config;
+	float deltaTime = 0; //last frame length
+
+	int LoadEngineConfig(); //WIP
+public:
 	Engine();
 	Engine(SDL_Window* Window, SDL_Renderer* Renderer);
-public:
 	~Engine();
-	static Engine* getInstance();
+	void ONquit();
+	void ONWindowResize();
+
+	static inline Engine* getInstance();
 	static Engine* Construct(SDL_Window* Window, SDL_Renderer* Renderer);
-	int LoadEngineConfig();
+
 	int Run();
-	friend RenderScheduler* getRenderScheduler();
-	friend const SDL_Window* getWindow();
-	friend Game* getGame();
+
+	static const float getDelta();
+	static RenderScheduler* getRenderScheduler();
+	static Game* getGame();
+	static const EngineConfig getConfiguration();
 };

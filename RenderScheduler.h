@@ -4,10 +4,10 @@
 #include <vector>
 #include <queue>
 #include <utility>
+#include "Camera.h"
 
 class RenderScheduler {
 		struct RenderTask {
-
 			const bool usesRotation;
         	SDL_Texture* const texture;
             const SDL_Rect srcrect;
@@ -15,21 +15,25 @@ class RenderScheduler {
             const double angle = 0;
 			const SDL_Point* center;
 			const SDL_RendererFlip flip = SDL_FLIP_NONE;
-
 			RenderTask(SDL_Texture* texture, const SDL_Rect& srcrect, const SDL_Rect& dstrect,
 				const double angle, const SDL_Point* center, const SDL_RendererFlip flip);
-
 			RenderTask(SDL_Texture* texture, const SDL_Rect& srcrect, const SDL_Rect& dstrect);
 		};
+
+		static RenderScheduler* instance;
 
 		std::vector<std::queue<RenderTask>> PQueue; //not a regular Pqueue
 		unsigned int TaskNum = 0;
 		std::unordered_map<std::string, SDL_Texture* const> Textures;
 		SDL_Renderer* const Renderer;
 		SDL_Window* const Window;
+		Camera* Viewport;
+
+		RenderScheduler(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
 
 	public:
-		RenderScheduler(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
+		static RenderScheduler* getInstance();
+		static RenderScheduler* Construct(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
 
 		~RenderScheduler();
 
@@ -44,7 +48,11 @@ class RenderScheduler {
 
 		void Draw();
 
+		Camera* const GetViewport();
+
 		std::pair<int,int> getWindowSize();
 
 		unsigned int getTaskNum();
+
+		std::pair<int,int> getPositionOnScreen(const Position Local);
 };
