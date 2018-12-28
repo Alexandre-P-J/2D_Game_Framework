@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "Camera.h"
 #include <vector>
+#include "Animation.h"
 
 class Player : public Object {
 		Position P;
@@ -11,6 +12,8 @@ class Player : public Object {
 		bool A_hold = false;
 		bool S_hold = false;
 		bool D_hold = false;
+
+		Animation* Animat;
 		void LoadPlayer(); //WIP
 	public:
 		Player();

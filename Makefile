@@ -3,7 +3,7 @@ rebuild: clean
 
 all: program
 
-obj=main.o Object.o Player.o Map.o RenderScheduler.o Camera.o Engine.o Game.o Input.o
+obj=main.o Object.o Player.o Map.o RenderScheduler.o Camera.o Engine.o Game.o Input.o Animation.o
 flags=-lSDL2 -lSDL2_image -g
 
 program: ${obj}
@@ -26,6 +26,8 @@ Game.o: Game.cc
 	g++ ${flags} -c Game.cc -I .
 Input.o: Input.cc
 	g++ ${flags} -c Input.cc -I .
+Animation.o: Animation.cc
+	g++ ${flags} -c Animation.cc -I .
 clean:
 	rm -f program
 	rm -f *.o

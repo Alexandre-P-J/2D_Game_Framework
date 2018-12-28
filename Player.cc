@@ -11,6 +11,12 @@ Player::Player() {
 	Bindings.push_back(Input::InputBind(SDLK_d, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressD)));
 
 	Bindings.push_back(Input::InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
+
+	auto RS = Engine::getRenderScheduler();
+	auto texture = RS->GetTexture("AnimTest.png");
+	SDL_Rect first = {0, 0, 32, 32};
+	std::vector<float> v = {500, 500, 1000};
+	Animat = new Animation(texture, first, 3, v);
 }
 
 Position Player::getPosition() const {
@@ -25,13 +31,11 @@ bool Player::Update() {
 	auto MapSize = Engine::getGame()->getMapSize(std::get<2>(P));
 	Engine::getRenderScheduler()->GetViewport()->Update(P, Econf.WsizeX, Econf.WsizeY, MapSize.first, MapSize.second);
 
-	// TESTING: Draw black square
-	auto RS = Engine::getRenderScheduler();
-	auto texture = RS->GetTexture("TestDot.png");
-	SDL_Rect srcrect = {0, 0, 128, 128};
-	auto LocalScreenPos = RS->getPositionOnScreen(P);
-	SDL_Rect dstrect = {LocalScreenPos.first, LocalScreenPos.second, 16, 16};
-	RS->ScheduleDraw(2, texture, srcrect, dstrect);
+
+
+	// TESTING:
+	auto LocalScreenPos = Engine::getRenderScheduler()->getPositionOnScreen(P);
+	(*Animat)(LocalScreenPos.first, LocalScreenPos.second, 5);
 
 	return true;
 }
