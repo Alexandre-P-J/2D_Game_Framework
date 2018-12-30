@@ -4,7 +4,7 @@ rebuild: clean
 all: program
 
 obj=main.o Object.o Player.o Map.o RenderScheduler.o Camera.o Engine.o Game.o Input.o Animation.o
-flags=-lSDL2 -lSDL2_image -g
+flags=-lSDL2 -lSDL2_image -lBox2D -g
 
 program: ${obj}
 	g++ ${flags} ${obj} -o program

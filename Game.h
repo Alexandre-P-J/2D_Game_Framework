@@ -18,7 +18,7 @@ class Game {
 
 		void Update();
 
-		std::vector<Player*>& getPlayers();
+		Player* getPlayer(int id);
 
 		std::pair<uint32_t,uint32_t> getMapSize(const int z) const;
 		std::pair<int,int> getMapLevelsInterval();

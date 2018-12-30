@@ -19,8 +19,10 @@ Game::~Game() {
 		delete Player;
 }
 
-std::vector<Player*>& Game::getPlayers() {
-	return Players;
+Player* Game::getPlayer(int id) {
+	if (id < Players.size())
+		return Players[id];
+	return nullptr;
 }
 
 void Game::Update() {

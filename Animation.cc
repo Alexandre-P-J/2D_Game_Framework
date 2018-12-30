@@ -3,12 +3,24 @@
 #include <cassert>
 #include <iostream>
 
+Animation::Animation() {};
+
 Animation::Animation(SDL_Texture* Tex, SDL_Rect first, int amount,
 	std::vector<float>& timing) : SpriteSheet(Tex), first(first), amount(amount),
 	timing(timing) {
 		assert(timing.size() == amount);
-	}
+		initialized = true;
+}
 
+void Animation::Construct(SDL_Texture* Tex, SDL_Rect first, int amount,
+	std::vector<float>& timing) {
+		SpriteSheet = Tex;
+		this->first = first;
+		this->amount = amount;
+		this->timing = timing;
+		assert(timing.size() == amount);
+		initialized = true;
+}
 
 SDL_Rect Animation::UpdateSprite() {
 	int Th, Tw;
@@ -74,9 +86,11 @@ std::pair<int,int> Animation::UpdateSize() {
 }
 
 void Animation::operator()(Position Pos, int DrawPriority) {
-	auto srcrect = UpdateSprite();
-	auto WH = UpdateSize();
-	Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second);
+	if (initialized) {
+		auto srcrect = UpdateSprite();
+		auto WH = UpdateSize();
+		Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second);
+	}
 }
 
 void Animation::SetXResize(int finalXSize, float time) {
@@ -84,6 +98,10 @@ void Animation::SetXResize(int finalXSize, float time) {
 }
 void Animation::SetYResize(int finalYSize, float time) {
 	YresizeTasks.push(std::make_pair(finalYSize, time));
+}
+void Animation::SetResize(int finalSize, float time) {
+	XresizeTasks.push(std::make_pair(finalSize, time));
+	YresizeTasks.push(std::make_pair(finalSize, time));
 }
 
 void Animation::Reset() {

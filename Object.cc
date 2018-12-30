@@ -4,6 +4,6 @@ bool Object::Update() {
 	return false;
 }
 
-const Position& Object::GetPosition() const {
+Position Object::getPosition() const {
 	return P;
 }

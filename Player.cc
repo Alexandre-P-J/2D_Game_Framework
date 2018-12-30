@@ -5,6 +5,7 @@
 Player::Player() {
 	//LoadPlayer();
 	P = std::make_tuple(0, 0, -1);
+
 	Bindings.push_back(Input::InputBind(SDLK_w, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressW)));
 	Bindings.push_back(Input::InputBind(SDLK_a, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressA)));
 	Bindings.push_back(Input::InputBind(SDLK_s, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressS)));
@@ -13,18 +14,15 @@ Player::Player() {
 	Bindings.push_back(Input::InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
 	Bindings.push_back(Input::InputBind(SDLK_UP, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowUp)));
 
-	auto RS = Engine::getRenderScheduler();
-	auto texture = RS->GetTexture("rogue.png");
+	auto texture = Engine::getRenderScheduler()->GetTexture("rogue.png");
 	SDL_Rect first = {0, 224, 32, 32};
 	std::vector<float> v = {32, 128, 128, 128, 32, 128, 128, 128, 128, 32};
-	Animat = new Animation(texture, first, 10, v);
-	Animat->SetXResize(64, 0);
-	Animat->SetYResize(64, 0);
+	Animations[WalkR].Construct(texture, first, 10, v);
+	Animations[WalkR].SetResize(64, 0);
+
 }
 
-Position Player::getPosition() const {
-	return P;
-}
+
 
 bool Player::Update() {
 	Movement();
@@ -37,7 +35,7 @@ bool Player::Update() {
 
 
 	// TESTING:
-	(*Animat)(P, 5);
+	Animations[WalkR](P, 5);
 
 	return true;
 }

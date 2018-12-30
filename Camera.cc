@@ -23,7 +23,7 @@ const Camera::Data& Camera::Get() const {
 }
 
 bool Camera::CanSeeObject(const Object& Obj) {
-	Position ObjPos = Obj.GetPosition();
+	Position ObjPos = Obj.getPosition();
 	if (std::get<2>(ObjPos) != std::get<2>(Info.P))
 		return false;
 	else if (std::get<0>(ObjPos) < std::get<0>(Info.P) ||
