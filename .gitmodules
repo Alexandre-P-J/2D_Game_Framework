@@ -1,3 +1,0 @@
-[submodule "PhysicsLibrary"]
-	path = PhysicsLibrary
-	url = git@github.com:erincatto/Box2D.git
