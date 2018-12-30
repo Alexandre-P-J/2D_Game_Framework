@@ -1,13 +1,13 @@
 rebuild: clean
 	make all
 
-all: program
+all: game.x
 
 obj=main.o Object.o Player.o Map.o RenderScheduler.o Camera.o Engine.o Game.o Input.o Animation.o
 flags=-lSDL2 -lSDL2_image -lBox2D -g
 
-program: ${obj}
-	g++ ${flags} ${obj} -o program
+game.x: ${obj}
+	g++ ${flags} ${obj} -o game.x
 main.o: main.cc
 	g++ ${flags} -c main.cc -I .
 Object.o: Object.cc
@@ -29,6 +29,6 @@ Input.o: Input.cc
 Animation.o: Animation.cc
 	g++ ${flags} -c Animation.cc -I .
 clean:
-	rm -f program
+	rm -f *.x
 	rm -f *.o
 	rm -f *.gch
