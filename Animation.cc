@@ -28,7 +28,7 @@ SDL_Rect Animation::UpdateSprite() {
 	return rect;
 }
 
-SDL_Rect Animation::UpdateSize(int x, int y) {
+std::pair<int,int> Animation::UpdateSize() {
 	auto Delta = Engine::getDelta();
 	if (!XresizeTasks.empty()) {
 		auto task = XresizeTasks.front();
@@ -70,14 +70,13 @@ SDL_Rect Animation::UpdateSize(int x, int y) {
 				(YresizeTasks.front()).second = YresizeTime;
 		}
 	}
-	SDL_Rect rect = {x, y, currentXsize, currentYsize};
-	return rect;
+	return std::make_pair(currentXsize, currentYsize);
 }
 
-void Animation::operator()(int x, int y, int DrawPriority) {
+void Animation::operator()(Position Pos, int DrawPriority) {
 	auto srcrect = UpdateSprite();
-	auto dstrect = UpdateSize(x, y);
-	Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, dstrect);
+	auto WH = UpdateSize();
+	Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second);
 }
 
 void Animation::SetXResize(int finalXSize, float time) {

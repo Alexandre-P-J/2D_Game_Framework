@@ -31,6 +31,7 @@ class RenderScheduler {
 
 		RenderScheduler(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
 
+		inline std::pair<int,int> getPositionOnScreen(const Position Local);
 	public:
 		static RenderScheduler* getInstance();
 		static RenderScheduler* Construct(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
@@ -40,11 +41,14 @@ class RenderScheduler {
 		SDL_Texture* GetTexture(const std::string& Path);
 
 		void ScheduleDraw(unsigned int priority, SDL_Texture* texture,
-		  const SDL_Rect srcrect, const SDL_Rect dstrect, const double angle,
-		  const SDL_Point* center, const SDL_RendererFlip flip);
+		  const SDL_Rect srcrect, const Position Pos, const int w, const int h,
+		  const double angle, const SDL_Point* angleCenter, const SDL_RendererFlip flip);
 
 		void ScheduleDraw(unsigned int priority, SDL_Texture* texture,
-		  const SDL_Rect srcrect, const SDL_Rect dstrect);
+		  const SDL_Rect srcrect, const Position Pos, const int w, const int h);
+
+		void ScheduleDraw(unsigned int priority, SDL_Texture* texture,
+  		  const SDL_Rect srcrect, SDL_Rect onScreenInfo);
 
 		void Draw();
 
@@ -53,6 +57,4 @@ class RenderScheduler {
 		std::pair<int,int> getWindowSize();
 
 		unsigned int getTaskNum();
-
-		std::pair<int,int> getPositionOnScreen(const Position Local);
 };

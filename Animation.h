@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <queue>
+#include "ExtraTypes.h"
 
 using resizeTask = std::pair<int, float>; // final size, time
 
@@ -21,10 +22,10 @@ class Animation {
 	int currentYsize = first.h;
 
 	SDL_Rect UpdateSprite();
-	SDL_Rect UpdateSize(int x, int y);
+	std::pair<int,int> UpdateSize();
 public:
 	Animation(SDL_Texture* Tex, SDL_Rect first, int amount, std::vector<float>& timing);
-	void operator()(int x, int y, int DrawPriority);
+	void operator()(Position Pos, int DrawPriority);
 
 	void SetXResize(int finalXSize, float time);
 	void SetYResize(int finalYSize, float time);

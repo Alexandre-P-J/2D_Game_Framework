@@ -37,8 +37,7 @@ bool Player::Update() {
 
 
 	// TESTING:
-	auto LocalScreenPos = Engine::getRenderScheduler()->getPositionOnScreen(P);
-	(*Animat)(LocalScreenPos.first, LocalScreenPos.second, 5);
+	(*Animat)(P, 5);
 
 	return true;
 }

@@ -49,24 +49,39 @@ RenderScheduler::RenderTask::RenderTask(SDL_Texture* texture,
   srcrect(srcrect), dstrect(dstrect), usesRotation(false) {}
 
 void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
-  const SDL_Rect srcrect, const SDL_Rect dstrect,
-	const double angle, const SDL_Point* center, const SDL_RendererFlip flip) {
+  const SDL_Rect srcrect, const Position Pos, const int w, const int h,
+  const double angle, const SDL_Point* angleCenter, const SDL_RendererFlip flip) {
+	auto sPos = getPositionOnScreen(Pos);
+  	SDL_Rect dstrect = {sPos.first, sPos.second, w, h};
 	if (priority < 0)
 		priority = 0;
 	else if (priority >= PQueue.size())
 		priority = PQueue.size() - 1;
-	RenderTask T(texture, srcrect, dstrect, angle, center, flip);
+	RenderTask T(texture, srcrect, dstrect, angle, angleCenter, flip);
 	PQueue[priority].push(T);
 	++TaskNum;
 
 }
 void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
-  const SDL_Rect srcrect, const SDL_Rect dstrect) {
+  const SDL_Rect srcrect, const Position Pos, const int w, const int h) {
+	auto sPos = getPositionOnScreen(Pos);
+	SDL_Rect dstrect = {sPos.first, sPos.second, w, h};
 	if (priority < 0)
 		priority = 0;
 	else if (priority >= PQueue.size())
 		priority = PQueue.size() - 1;
 	RenderTask T(texture, srcrect, dstrect);
+	PQueue[priority].push(T);
+	++TaskNum;
+}
+
+void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
+  const SDL_Rect srcrect, SDL_Rect onScreenInfo) {
+	if (priority < 0)
+		priority = 0;
+	else if (priority >= PQueue.size())
+		priority = PQueue.size() - 1;
+	RenderTask T(texture, srcrect, onScreenInfo);
 	PQueue[priority].push(T);
 	++TaskNum;
 }
