@@ -2,17 +2,32 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include <vector>
+#include <utility>
+#include <queue>
+
+using resizeTask = std::pair<int, float>; // final size, time
 
 class Animation {
 	SDL_Texture* SpriteSheet;
 	SDL_Rect first;
 	int amount;
 	int current = 0;
-	float SpeedMultiplier = 1;
 	std::vector<float> timing;
-	float TimeSinceUpdate = 0;
-	void Draw(int x, int y, int DrawPriority);
+	float TimeSinceSpriteUpdate = 0;
+	// Sprite Resize:
+	std::queue<resizeTask> XresizeTasks;
+	int currentXsize = first.w;
+	std::queue<resizeTask> YresizeTasks;
+	int currentYsize = first.h;
+
+	SDL_Rect UpdateSprite();
+	SDL_Rect UpdateSize(int x, int y);
 public:
 	Animation(SDL_Texture* Tex, SDL_Rect first, int amount, std::vector<float>& timing);
 	void operator()(int x, int y, int DrawPriority);
+
+	void SetXResize(int finalXSize, float time);
+	void SetYResize(int finalYSize, float time);
+
+	void Reset();
 };

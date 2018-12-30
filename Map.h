@@ -43,4 +43,7 @@ class Map {
 		std::pair<uint32_t,uint32_t> getLevelSize(int const LevelID) const;
 		Level* getLevel (const int Level);
 		bool LevelExists(const int Level);
+
+		int getMinLevel() const;
+		int getMaxLevel() const;
 };

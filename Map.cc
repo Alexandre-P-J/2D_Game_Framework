@@ -196,6 +196,13 @@ bool Map::LevelExists(const int Level) {
 	return (!(index < 0 || index >= Levels.size()));
 }
 
+int Map::getMinLevel() const {
+	return minLevel;
+}
+int Map::getMaxLevel() const {
+	return minLevel + Levels.size() - 1;
+}
+
 void Map::Update() {
 	auto RS = Engine::getRenderScheduler();
 	Camera cam = *(RS->GetViewport());

@@ -11,12 +11,15 @@ Player::Player() {
 	Bindings.push_back(Input::InputBind(SDLK_d, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressD)));
 
 	Bindings.push_back(Input::InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
+	Bindings.push_back(Input::InputBind(SDLK_UP, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowUp)));
 
 	auto RS = Engine::getRenderScheduler();
-	auto texture = RS->GetTexture("AnimTest.png");
-	SDL_Rect first = {0, 0, 32, 32};
-	std::vector<float> v = {500, 500, 1000};
-	Animat = new Animation(texture, first, 3, v);
+	auto texture = RS->GetTexture("rogue.png");
+	SDL_Rect first = {0, 224, 32, 32};
+	std::vector<float> v = {32, 128, 128, 128, 32, 128, 128, 128, 128, 32};
+	Animat = new Animation(texture, first, 10, v);
+	Animat->SetXResize(64, 0);
+	Animat->SetYResize(64, 0);
 }
 
 Position Player::getPosition() const {
@@ -64,6 +67,12 @@ void Player::ON_KeyPressD(Uint8 state) {
 	D_hold = (state == SDL_PRESSED);
 }
 void Player::ON_KeyPressArrowDown(Uint8 state) {
-	std::get<2>(P) += 1;
-	std::cout << "arrow down" << std::endl;
+	auto LevelIDinterval = Engine::getGame()->getMapLevelsInterval();
+	if (std::get<2>(P) > LevelIDinterval.first)
+		std::get<2>(P) -= 1;
+}
+void Player::ON_KeyPressArrowUp(Uint8 state) {
+	auto LevelIDinterval = Engine::getGame()->getMapLevelsInterval();
+	if (std::get<2>(P) < LevelIDinterval.second)
+		std::get<2>(P) += 1;
 }

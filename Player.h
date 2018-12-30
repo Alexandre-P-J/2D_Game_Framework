@@ -6,7 +6,7 @@
 
 class Player : public Object {
 		Position P;
-		float Speed = 0.35;
+		float Speed = 0.15;
 		std::vector<uint64_t> Bindings;
 		bool W_hold = false;
 		bool A_hold = false;
@@ -27,4 +27,5 @@ class Player : public Object {
 		void ON_KeyPressS(Uint8 state);
 		void ON_KeyPressD(Uint8 state);
 		void ON_KeyPressArrowDown(Uint8 state);
+		void ON_KeyPressArrowUp(Uint8 state);
 };

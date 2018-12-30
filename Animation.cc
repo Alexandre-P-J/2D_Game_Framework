@@ -1,6 +1,7 @@
 #include "Animation.h"
 #include "Engine.h"
 #include <cassert>
+#include <iostream>
 
 Animation::Animation(SDL_Texture* Tex, SDL_Rect first, int amount,
 	std::vector<float>& timing) : SpriteSheet(Tex), first(first), amount(amount),
@@ -8,30 +9,89 @@ Animation::Animation(SDL_Texture* Tex, SDL_Rect first, int amount,
 		assert(timing.size() == amount);
 	}
 
-void Animation::Draw(int x, int y, int DrawPriority) {
+
+SDL_Rect Animation::UpdateSprite() {
 	int Th, Tw;
 	SDL_QueryTexture(SpriteSheet, NULL, NULL, &Tw, &Th);
+	SDL_Rect rect = {((current*first.w)+first.x) % Tw, (current/(Tw/first.w))*first.h + first.y, first.w, first.h};
+	//Update time:
+	auto Delta = Engine::getDelta();
+	TimeSinceSpriteUpdate += Delta;
+	if (timing[current] <= TimeSinceSpriteUpdate) {
+		TimeSinceSpriteUpdate = TimeSinceSpriteUpdate - timing[current];
+		current = (current + 1) % amount;
+	}
+	else if (timing[current] - TimeSinceSpriteUpdate < std::abs(timing[current] - (TimeSinceSpriteUpdate + Delta))) {
+		TimeSinceSpriteUpdate = (timing[current] - TimeSinceSpriteUpdate) * -1;
+		current = (current + 1) % amount;
+	}
+	return rect;
+}
 
-	auto rect = first;
-	rect.x = ((current*first.w)+first.x) % Tw;
-	rect.y = (current/(Tw/first.w))*first.h;
-	SDL_Rect dstrect = {x, y, first.w, first.h};
-	Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, rect, dstrect);
+SDL_Rect Animation::UpdateSize(int x, int y) {
+	auto Delta = Engine::getDelta();
+	if (!XresizeTasks.empty()) {
+		auto task = XresizeTasks.front();
+		auto finalXsize = task.first;
+		auto XresizeTime = task.second;
+		if (finalXsize != currentXsize) {
+			if (XresizeTime > Delta) {
+				int dx = std::round((finalXsize - currentXsize) / (XresizeTime/Delta));
+				currentXsize += dx;
+				XresizeTime -= Delta;
+			}
+			else {
+				currentXsize = finalXsize;
+				XresizeTime = 0;
+			}
+			if (finalXsize == currentXsize)
+				XresizeTasks.pop();
+			else
+				(XresizeTasks.front()).second = XresizeTime;
+		}
+	}
+	if (!YresizeTasks.empty()) {
+		auto task = YresizeTasks.front();
+		auto finalYsize = task.first;
+		auto YresizeTime = task.second;
+		if (finalYsize != currentYsize) {
+			if (YresizeTime > Delta) {
+				int dy = std::round((finalYsize - currentYsize) / (YresizeTime/Delta));
+				currentYsize += dy;
+				YresizeTime -= Delta;
+			}
+			else {
+				currentYsize = finalYsize;
+				YresizeTime = 0;
+			}
+			if (finalYsize == currentYsize)
+				YresizeTasks.pop();
+			else
+				(YresizeTasks.front()).second = YresizeTime;
+		}
+	}
+	SDL_Rect rect = {x, y, currentXsize, currentYsize};
+	return rect;
 }
 
 void Animation::operator()(int x, int y, int DrawPriority) {
-	auto Delta = Engine::getDelta();
-	TimeSinceUpdate += Delta;
-	if (timing[current] <= TimeSinceUpdate) {
-		Draw(x, y, DrawPriority);
-		current = (current + 1) % amount;
-		TimeSinceUpdate = 0;
-	}
-	else if (timing[current] - TimeSinceUpdate < std::abs(timing[current] - (TimeSinceUpdate + Delta))) {
-		Draw(x, y, DrawPriority);
-		current = (current + 1) % amount;
-		TimeSinceUpdate = 0;
-	}
-	else
-		Draw(x, y, DrawPriority);
+	auto srcrect = UpdateSprite();
+	auto dstrect = UpdateSize(x, y);
+	Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, dstrect);
+}
+
+void Animation::SetXResize(int finalXSize, float time) {
+	XresizeTasks.push(std::make_pair(finalXSize, time));
+}
+void Animation::SetYResize(int finalYSize, float time) {
+	YresizeTasks.push(std::make_pair(finalYSize, time));
+}
+
+void Animation::Reset() {
+	XresizeTasks = std::queue<resizeTask>();
+	YresizeTasks = std::queue<resizeTask>();
+	current = 0;
+	TimeSinceSpriteUpdate = 0;
+	currentXsize = first.w;
+	currentYsize = first.h;
 }
