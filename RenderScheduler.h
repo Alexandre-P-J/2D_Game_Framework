@@ -13,10 +13,10 @@ class RenderScheduler {
             const SDL_Rect srcrect;
             const SDL_Rect dstrect;
             const double angle = 0;
-			const SDL_Point* center;
+			const SDL_Point center = {0,0};
 			const SDL_RendererFlip flip = SDL_FLIP_NONE;
 			RenderTask(SDL_Texture* texture, const SDL_Rect& srcrect, const SDL_Rect& dstrect,
-				const double angle, const SDL_Point* center, const SDL_RendererFlip flip);
+				const double angle, const SDL_Point center, const SDL_RendererFlip flip);
 			RenderTask(SDL_Texture* texture, const SDL_Rect& srcrect, const SDL_Rect& dstrect);
 		};
 
@@ -42,7 +42,7 @@ class RenderScheduler {
 
 		void ScheduleDraw(unsigned int priority, SDL_Texture* texture,
 		  const SDL_Rect srcrect, const Position Pos, const int w, const int h,
-		  const double angle, const SDL_Point* angleCenter, const SDL_RendererFlip flip);
+		  const double angle, const SDL_Point angleCenter, const SDL_RendererFlip flip);
 
 		void ScheduleDraw(unsigned int priority, SDL_Texture* texture,
 		  const SDL_Rect srcrect, const Position Pos, const int w, const int h);

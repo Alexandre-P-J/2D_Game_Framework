@@ -40,7 +40,7 @@ SDL_Texture* RenderScheduler::GetTexture(const std::string& Path) {
 
 RenderScheduler::RenderTask::RenderTask(SDL_Texture* texture,
   const SDL_Rect& srcrect, const SDL_Rect& dstrect, const double angle,
-  const SDL_Point* center, const SDL_RendererFlip flip) : texture(texture),
+  const SDL_Point center, const SDL_RendererFlip flip) : texture(texture),
   srcrect(srcrect), dstrect(dstrect), angle(angle), center(center), flip(flip),
   usesRotation(true) {}
 
@@ -50,7 +50,7 @@ RenderScheduler::RenderTask::RenderTask(SDL_Texture* texture,
 
 void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
   const SDL_Rect srcrect, const Position Pos, const int w, const int h,
-  const double angle, const SDL_Point* angleCenter, const SDL_RendererFlip flip) {
+  const double angle, const SDL_Point angleCenter, const SDL_RendererFlip flip) {
 	auto sPos = getPositionOnScreen(Pos);
   	SDL_Rect dstrect = {sPos.first, sPos.second, w, h};
 	if (priority < 0)
@@ -93,7 +93,7 @@ void RenderScheduler::Draw() {
 			RenderTask T = PQueue[i].front();
 			if (T.usesRotation)
 				SDL_RenderCopyEx(Renderer, T.texture, &(T.srcrect), &(T.dstrect),
-					T.angle, T.center, T.flip);
+					T.angle, &(T.center), T.flip);
 			else
 				SDL_RenderCopy(Renderer, T.texture, &(T.srcrect), &(T.dstrect));
 			PQueue[i].pop();

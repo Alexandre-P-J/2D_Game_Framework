@@ -14,10 +14,10 @@ Player::Player() {
 	Bindings.push_back(Input::InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
 	Bindings.push_back(Input::InputBind(SDLK_UP, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowUp)));
 
-	auto texture = Engine::getRenderScheduler()->GetTexture("rogue.png");
-	SDL_Rect first = {0, 224, 32, 32};
-	std::vector<float> v = {32, 128, 128, 128, 32, 128, 128, 128, 128, 32};
-	Animations[WalkR].Construct(texture, first, 10, v);
+	auto texture = Engine::getRenderScheduler()->GetTexture("runner-export.png");
+	SDL_Rect first = {0, 0, 128, 128};
+	std::vector<float> v = {150, 100, 140, 150, 100, 140};
+	Animations[WalkR].Construct(texture, first, 6, v);
 	Animations[WalkR].SetResize(64, 0);
 
 }

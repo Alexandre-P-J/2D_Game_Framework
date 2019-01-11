@@ -90,6 +90,10 @@ void Animation::operator()(Position Pos, int DrawPriority) {
 		auto srcrect = UpdateSprite();
 		auto WH = UpdateSize();
 		Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second);
+		//int a, b; std::cin >> a >> b;
+		//double c; std::cin >> c;
+		//SDL_Point center = {a, b};
+		//Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second, c, center, SDL_FLIP_NONE);
 	}
 }
 

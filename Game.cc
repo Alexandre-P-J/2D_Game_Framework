@@ -28,7 +28,7 @@ Player* Game::getPlayer(int id) {
 void Game::Update() {
 	UpdateObjects();
 
-	GameMap.Update();
+	//GameMap.Update();
 }
 
 void Game::UpdateObjects() {
