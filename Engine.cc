@@ -16,16 +16,10 @@ Engine* Engine::Construct(SDL_Window* Window, SDL_Renderer* Renderer) {
 	if (instance)
 		delete instance;
 	instance = new Engine(Window, Renderer);
-	instance->GameComponent = new Game();
+	instance->GameComponents.push_back(std::make_shared<Game>());
 	return instance;
 }
 
-Engine::~Engine() {
-	delete InputComponent;
-	delete RenderComponent;
-	delete GameComponent;
-	//Both Renderer and Window are deleted at main() since arent Engine bonded
-}
 
 Engine::Engine(SDL_Window* Window, SDL_Renderer* Renderer) : RenderComponent(RenderScheduler::Construct(Renderer, Window, 32)), InputComponent(Input::Construct()) {
 		LoadEngineConfig();
@@ -56,7 +50,8 @@ int Engine::Run() {
 		//FRAME TIME START
 		auto frame_start = std::chrono::steady_clock::now();
 		//GAME UPDATE
-		GameComponent->Update();
+		for (auto p : GameComponents)
+			p->Update();
 		//DRAW
 		RenderComponent->Draw();
 		// INPUT
@@ -79,15 +74,15 @@ const float Engine::getDelta() {
 	assert(ptr);
 	return ptr->deltaTime;
 }
-RenderScheduler* Engine::getRenderScheduler() {
+std::shared_ptr<RenderScheduler> Engine::getRenderScheduler() {
 	Engine* ptr = Engine::getInstance();
 	assert(ptr);
 	return ptr->RenderComponent;
 }
-Game* Engine::getGame() {
+const std::shared_ptr<Game> Engine::getGame(int i) {
 	Engine* ptr = Engine::getInstance();
 	assert(ptr);
-	return ptr->GameComponent;
+	return ptr->GameComponents[i];
 }
 const EngineConfig Engine::getConfiguration() {
 	Engine* ptr = Engine::getInstance();

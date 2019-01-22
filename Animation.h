@@ -28,7 +28,7 @@ public:
 	Animation();
 	Animation(SDL_Texture* Tex, SDL_Rect first, int amount, std::vector<float>& timing);
 	void Construct(SDL_Texture* Tex, SDL_Rect first, int amount, std::vector<float>& timing);
-	void operator()(Position Pos, int DrawPriority);
+	void operator()(Position Pos, Rotation r, int DrawPriority);
 
 	void SetXResize(int finalXSize, float time);
 	void SetYResize(int finalYSize, float time);

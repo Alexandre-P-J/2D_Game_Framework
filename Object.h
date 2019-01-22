@@ -6,6 +6,7 @@
 class Object {
 	protected:
 		Position P;
+		Rotation R;
 	private:
 		bool visible = true;
 	public:

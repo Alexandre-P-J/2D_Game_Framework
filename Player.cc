@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <iostream>
 #include "Engine.h"
+#include <utility>
 
 Player::Player() {
 	//LoadPlayer();
@@ -35,20 +36,41 @@ bool Player::Update() {
 
 
 	// TESTING:
-	Animations[WalkR](P, 5);
+	Animations[WalkR](P, R, 5);
 
 	return true;
 }
 
 void Player::Movement() {
-	if (W_hold)
+	std::pair<int,int> dir = {0, 0};
+	if (W_hold) {
 		std::get<1>(P) -= Speed*Engine::getDelta();
-	if (A_hold)
+		dir.second -= 1;
+		R = 0;
+	}
+	if (A_hold) {
 		std::get<0>(P) -= Speed*Engine::getDelta();
-	if (S_hold)
+		dir.first -= 1;
+		R = 270;
+	}
+	if (S_hold) {
 		std::get<1>(P) += Speed*Engine::getDelta();
-	if (D_hold)
+		dir.second += 1;
+		R = 180;
+	}
+	if (D_hold) {
 		std::get<0>(P) += Speed*Engine::getDelta();
+		dir.first += 1;
+		R = 90;
+	}
+	if (dir == std::pair<int,int>(1, -1))
+		R = 45;
+	else if (dir == std::pair<int,int>(-1, -1))
+		R = 315;
+	else if (dir == std::pair<int,int>(1, 1))
+		R = 135;
+	else if (dir == std::pair<int,int>(-1, 1))
+		R = 225;
 }
 
 void Player::ON_KeyPressW(Uint8 state) {

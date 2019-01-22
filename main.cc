@@ -9,7 +9,7 @@ int main() {
 	SDL_Renderer* Renderer;
 	SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_RESIZABLE, &Window, &Renderer);
 
-	Engine* Engine = Engine::Construct(Window, Renderer);
+	auto Engine = Engine::Construct(Window, Renderer);
 	Engine->Run();
 
 	SDL_DestroyRenderer(Renderer);

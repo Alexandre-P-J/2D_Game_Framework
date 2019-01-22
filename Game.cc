@@ -28,7 +28,7 @@ Player* Game::getPlayer(int id) {
 void Game::Update() {
 	UpdateObjects();
 
-	//GameMap.Update();
+	GameMap.Update();
 }
 
 void Game::UpdateObjects() {
@@ -45,6 +45,6 @@ std::pair<uint32_t,uint32_t> Game::getMapSize(const int z) const {
 	return GameMap.getLevelSize(z);
 }
 
-std::pair<int,int> Game::getMapLevelsInterval() {
+std::pair<int,int> Game::getMapLevelsInterval() const{
 	return std::make_pair(GameMap.getMinLevel(), GameMap.getMaxLevel());
 }
