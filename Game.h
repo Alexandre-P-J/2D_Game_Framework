@@ -5,21 +5,21 @@
 #include <vector>
 #include <list>
 #include "Object.h"
+#include <memory>
 
 class Game {
-	Map GameMap;
-	std::list<Object*> OBJList;
-	std::vector<Player*> Players;
+		Map GameMap;
+		std::list<std::shared_ptr<Object>> OBJList;
+		std::vector<std::shared_ptr<Player>> Players;
 
-	void UpdateObjects();
+		void UpdateObjects();
+
 	public:
 		Game();
-		~Game();
 
 		void Update();
 
-		Player* getPlayer(int id);
-
+		std::shared_ptr<Player> getPlayer(int id);
 		std::pair<uint32_t,uint32_t> getMapSize(const int z) const;
 		std::pair<int,int> getMapLevelsInterval() const;
 };

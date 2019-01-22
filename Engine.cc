@@ -8,10 +8,6 @@
 
 Engine* Engine::instance = nullptr;
 
-Engine* Engine::getInstance() {
-	return instance; //could return nullptr
-}
-
 Engine* Engine::Construct(SDL_Window* Window, SDL_Renderer* Renderer) {
 	if (instance)
 		delete instance;
@@ -21,12 +17,12 @@ Engine* Engine::Construct(SDL_Window* Window, SDL_Renderer* Renderer) {
 }
 
 
-Engine::Engine(SDL_Window* Window, SDL_Renderer* Renderer) : RenderComponent(RenderScheduler::Construct(Renderer, Window, 32)), InputComponent(Input::Construct()) {
+Engine::Engine(SDL_Window* Window, SDL_Renderer* Renderer) : Renderer(Renderer, Window, 32) {
 		LoadEngineConfig();
 		SDL_SetWindowSize(Window, config.WsizeX, config.WsizeY);
 		SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-		Input::InputBind(SDL_QUIT, fastdelegate::MakeDelegate(this, &Engine::ONquit));
-		Input::InputBind(SDL_WINDOWEVENT, SDL_WINDOWEVENT_RESIZED, fastdelegate::MakeDelegate(this, &Engine::ONWindowResize));
+		Input.InputBind(SDL_QUIT, fastdelegate::MakeDelegate(this, &Engine::ONquit));
+		Input.InputBind(SDL_WINDOWEVENT, SDL_WINDOWEVENT_RESIZED, fastdelegate::MakeDelegate(this, &Engine::ONWindowResize));
 }
 
 int Engine::LoadEngineConfig() {
@@ -39,7 +35,7 @@ void Engine::ONquit() {
 }
 
 void Engine::ONWindowResize() {
-	auto Wsize = RenderScheduler::getInstance()->getWindowSize();
+	auto Wsize = Renderer.getWindowSize();
 	config.WsizeX = Wsize.first;
 	config.WsizeY = Wsize.second;
 	std::cout << "Resizee" << std::endl;
@@ -53,9 +49,9 @@ int Engine::Run() {
 		for (auto p : GameComponents)
 			p->Update();
 		//DRAW
-		RenderComponent->Draw();
+		Renderer.Draw();
 		// INPUT
-		InputComponent->Run();
+		Input.Run();
 		// FRAME TIME END, DO ADJUSTMENTS
 		std::chrono::duration<double> frame_timelength;
 		do {
@@ -69,23 +65,28 @@ int Engine::Run() {
 	return 0;
 }
 
-const float Engine::getDelta() {
-	Engine* ptr = Engine::getInstance();
+const float EngineUtils::getDelta() {
+	Engine* ptr = Engine::instance;
 	assert(ptr);
 	return ptr->deltaTime;
 }
-std::shared_ptr<RenderScheduler> Engine::getRenderScheduler() {
-	Engine* ptr = Engine::getInstance();
+RenderComponent* EngineUtils::getRenderComponent() {
+	Engine* ptr = Engine::instance;
 	assert(ptr);
-	return ptr->RenderComponent;
+	return &(ptr->Renderer);
 }
-const std::shared_ptr<Game> Engine::getGame(int i) {
-	Engine* ptr = Engine::getInstance();
+const std::shared_ptr<Game> EngineUtils::getGame(int i) {
+	Engine* ptr = Engine::instance;
 	assert(ptr);
 	return ptr->GameComponents[i];
 }
-const EngineConfig Engine::getConfiguration() {
-	Engine* ptr = Engine::getInstance();
+const EngineConfig EngineUtils::getConfiguration() {
+	Engine* ptr = Engine::instance;
 	assert(ptr);
 	return ptr->config;
+}
+InputComponent* EngineUtils::getInputComponent() {
+	Engine* ptr = Engine::instance;
+	assert(ptr);
+	return &(ptr->Input);
 }

@@ -27,7 +27,7 @@ SDL_Rect Animation::UpdateSprite() {
 	SDL_QueryTexture(SpriteSheet, NULL, NULL, &Tw, &Th);
 	SDL_Rect rect = {((current*first.w)+first.x) % Tw, (current/(Tw/first.w))*first.h + first.y, first.w, first.h};
 	//Update time:
-	auto Delta = Engine::getDelta();
+	auto Delta = EngineUtils::getDelta();
 	TimeSinceSpriteUpdate += Delta;
 	if (timing[current] <= TimeSinceSpriteUpdate) {
 		TimeSinceSpriteUpdate = TimeSinceSpriteUpdate - timing[current];
@@ -41,7 +41,7 @@ SDL_Rect Animation::UpdateSprite() {
 }
 
 std::pair<int,int> Animation::UpdateSize() {
-	auto Delta = Engine::getDelta();
+	auto Delta = EngineUtils::getDelta();
 	if (!XresizeTasks.empty()) {
 		auto task = XresizeTasks.front();
 		auto finalXsize = task.first;
@@ -89,9 +89,9 @@ void Animation::operator()(Position Pos, Rotation r, int DrawPriority) {
 	if (initialized) {
 		auto srcrect = UpdateSprite();
 		auto WH = UpdateSize();
-		//Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second);
+		//Engine::getRenderComponent()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second);
 		SDL_Point center = {WH.first/2, WH.second/2};
-		Engine::getRenderScheduler()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second, r.ToDouble(), center, SDL_FLIP_NONE);
+		EngineUtils::getRenderComponent()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second, r.ToDouble(), center, SDL_FLIP_NONE);
 	}
 }
 

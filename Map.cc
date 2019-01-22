@@ -8,9 +8,9 @@
 #include "SDL2/SDL_image.h"
 #include <tuple>
 #include <algorithm>
-#include "Engine.h"
 #include <iostream>
 #include <cassert>
+#include "Engine.h"
 
 using namespace rapidxml;
 
@@ -72,7 +72,7 @@ void Map::Reload(const std::string& MapFile) {
 	std::string content(buffer.str());
 	doc.parse<0>(&content[0]);
 	xml_node<>* pRoot = doc.first_node();
-	auto RS = Engine::getRenderScheduler();
+	auto RS = EngineUtils::getRenderComponent();
 
 	//Parsing Tileset (Texture->tile info) : UBoundTexture vector
 	xml_node<>* pNode0 = pRoot->first_node("tileset");
@@ -204,7 +204,7 @@ int Map::getMaxLevel() const {
 }
 
 void Map::Update() {
-	auto RS = Engine::getRenderScheduler();
+	auto RS = EngineUtils::getRenderComponent();
 	Camera cam = *(RS->GetViewport());
 	float Zoom = (cam.Get()).Zoom;
 	//Tile

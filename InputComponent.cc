@@ -1,96 +1,72 @@
-#include "Input.h"
+#include "InputComponent.h"
 #include "SDL2/SDL.h"
-#include <iostream>
-#include <cassert>
-
-Input* Input::instance = nullptr;
-
-Input* Input::getInstance() {
-	return instance; //could return nullptr
-}
-
-Input* Input::Construct() {
-	if (instance)
-		delete instance;
-	instance = new Input();
-	return instance;
-}
 
 
-
-uint64_t Input::InputBind(std::uint32_t Type, fastdelegate::FastDelegate0<> Delegate) {
-	auto Ptr = Input::getInstance();
-	assert(Ptr);
-	auto stat = Ptr->GlobalIN.insert(std::make_pair(Type, Event<>()));
+uint64_t InputComponent::InputBind(std::uint32_t Type, fastdelegate::FastDelegate0<> Delegate) {
+	auto stat = GlobalIN.insert(std::make_pair(Type, Event<>()));
 	uint32_t id;
 	if (!stat.second)
-		id = (Ptr->GlobalIN[Type]).Bind(Delegate);
+		id = (GlobalIN[Type]).Bind(Delegate);
 	else
 		id = (stat.first)->second.Bind(Delegate);
-	Ptr->GlobalIN_IDS.insert(std::make_pair(id, stat.first));
+	GlobalIN_IDS.insert(std::make_pair(id, stat.first));
 	return merge(id, 0);
 }
 
-uint64_t Input::InputBind(SDL_Keycode Key, fastdelegate::FastDelegate1<Uint8> Delegate) {
-	auto Ptr = Input::getInstance();
-	assert(Ptr);
-	auto stat = Ptr->KeyIN.insert(std::make_pair(Key, Event<Uint8>()));
+uint64_t InputComponent::InputBind(SDL_Keycode Key, fastdelegate::FastDelegate1<Uint8> Delegate) {
+	auto stat = KeyIN.insert(std::make_pair(Key, Event<Uint8>()));
 	uint32_t id;
 	if (!stat.second)
-		id = (Ptr->KeyIN[Key]).Bind(Delegate);
+		id = (KeyIN[Key]).Bind(Delegate);
 	else
 		id = (stat.first)->second.Bind(Delegate);
-	Ptr->KeyIN_IDS.insert(std::make_pair(id, stat.first));
+	KeyIN_IDS.insert(std::make_pair(id, stat.first));
 	return merge(id, 1);
 }
 
-uint64_t Input::InputBind(std::uint32_t Type, Uint8 WindowAction, fastdelegate::FastDelegate0<> Delegate) {
-	auto Ptr = Input::getInstance();
-	assert(Ptr);
-	auto stat = Ptr->WindowIN.insert(std::make_pair(std::make_pair(Type,WindowAction), Event<>()));
+uint64_t InputComponent::InputBind(std::uint32_t Type, Uint8 WindowAction, fastdelegate::FastDelegate0<> Delegate) {
+	auto stat = WindowIN.insert(std::make_pair(std::make_pair(Type,WindowAction), Event<>()));
 	uint32_t id;
 	if (!stat.second)
-		id = (Ptr->WindowIN[std::make_pair(Type,WindowAction)]).Bind(Delegate);
+		id = (WindowIN[std::make_pair(Type,WindowAction)]).Bind(Delegate);
 	else
 		id = (stat.first)->second.Bind(Delegate);
-	Ptr->WindowIN_IDS.insert(std::make_pair(id, stat.first));
+	WindowIN_IDS.insert(std::make_pair(id, stat.first));
 	return merge(id, 2);
 }
 
 
-void Input::InputUnbind(const uint64_t uniqueID) {
+void InputComponent::InputUnbind(const uint64_t uniqueID) {
 	auto type = splitsecond(uniqueID);
 	auto id = splitfirst(uniqueID);
-	auto Ptr = Input::getInstance();
-	assert(Ptr);
 	switch (type) {
 		case 0: {
-			auto it = Ptr->GlobalIN_IDS.find(id);
-			if (it != Ptr->GlobalIN_IDS.end()) {
+			auto it = GlobalIN_IDS.find(id);
+			if (it != GlobalIN_IDS.end()) {
 				((it->second)->second).UnBind(id);
 				if (((it->second)->second).size() == 0)
-					Ptr->GlobalIN.erase(it->second);
-				Ptr->GlobalIN_IDS.erase(it);
+					GlobalIN.erase(it->second);
+				GlobalIN_IDS.erase(it);
 			}
 			break;
 		}
 		case 1: {
-			auto it = Ptr->KeyIN_IDS.find(id);
-			if (it != Ptr->KeyIN_IDS.end()) {
+			auto it = KeyIN_IDS.find(id);
+			if (it != KeyIN_IDS.end()) {
 				((it->second)->second).UnBind(id);
 				if (((it->second)->second).size() == 0)
-					Ptr->KeyIN.erase(it->second);
-				Ptr->KeyIN_IDS.erase(it);
+					KeyIN.erase(it->second);
+				KeyIN_IDS.erase(it);
 			}
 			break;
 		}
 		case 2: {
-			auto it = Ptr->WindowIN_IDS.find(id);
-			if (it != Ptr->WindowIN_IDS.end()) {
+			auto it = WindowIN_IDS.find(id);
+			if (it != WindowIN_IDS.end()) {
 				((it->second)->second).UnBind(id);
 				if (((it->second)->second).size() == 0)
-					Ptr->WindowIN.erase(it->second);
-				Ptr->WindowIN_IDS.erase(it);
+					WindowIN.erase(it->second);
+				WindowIN_IDS.erase(it);
 			}
 			break;
 		}
@@ -99,7 +75,7 @@ void Input::InputUnbind(const uint64_t uniqueID) {
 
 
 
-void Input::Run() {
+void InputComponent::Run() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {

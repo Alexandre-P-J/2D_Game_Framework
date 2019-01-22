@@ -24,6 +24,7 @@ class Animation {
 
 	SDL_Rect UpdateSprite();
 	std::pair<int,int> UpdateSize();
+	
 public:
 	Animation();
 	Animation(SDL_Texture* Tex, SDL_Rect first, int amount, std::vector<float>& timing);

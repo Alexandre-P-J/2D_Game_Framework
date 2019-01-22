@@ -6,7 +6,7 @@
 #include <utility>
 #include "Camera.h"
 
-class RenderScheduler {
+class RenderComponent {
 		struct RenderTask {
 			const bool usesRotation;
         	SDL_Texture* const texture;
@@ -20,8 +20,6 @@ class RenderScheduler {
 			RenderTask(SDL_Texture* texture, const SDL_Rect& srcrect, const SDL_Rect& dstrect);
 		};
 
-		static RenderScheduler* instance;
-
 		std::vector<std::queue<RenderTask>> PQueue; //not a regular Pqueue
 		unsigned int TaskNum = 0;
 		std::unordered_map<std::string, SDL_Texture* const> Textures;
@@ -29,14 +27,11 @@ class RenderScheduler {
 		SDL_Window* const Window;
 		Camera* Viewport;
 
-		RenderScheduler(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
-
 		inline std::pair<int,int> getPositionOnScreen(const Position Local);
-	public:
-		static RenderScheduler* getInstance();
-		static RenderScheduler* Construct(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
 
-		~RenderScheduler();
+	public:
+		RenderComponent(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities);
+		~RenderComponent();
 
 		SDL_Texture* GetTexture(const std::string& Path);
 

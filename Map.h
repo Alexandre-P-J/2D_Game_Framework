@@ -4,7 +4,6 @@
 #include <vector>
 #include <tuple>
 #include <utility>
-#include "RenderScheduler.h"
 #include "Camera.h"
 #include "ExtraTypes.h"
 

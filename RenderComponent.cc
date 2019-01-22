@@ -1,25 +1,15 @@
-#include "RenderScheduler.h"
+#include "RenderComponent.h"
 #include <iostream>
 #include <utility>
 #include <cassert>
 
-RenderScheduler* RenderScheduler::instance = nullptr;
 
-RenderScheduler* RenderScheduler::getInstance() {
-	return instance; // can return nullptr
-}
-RenderScheduler* RenderScheduler::Construct(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities) {
-	assert(!instance);
-	instance = new RenderScheduler(Renderer, Window, maxPriorities);
-	return instance;
-}
-
-RenderScheduler::RenderScheduler(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities) :
+RenderComponent::RenderComponent(SDL_Renderer* Renderer, SDL_Window* Window, int maxPriorities) :
 	Renderer(Renderer), Window(Window), PQueue(maxPriorities) {
 		Viewport = new Camera;
 	}
 
-RenderScheduler::~RenderScheduler() {
+RenderComponent::~RenderComponent() {
 	auto it = Textures.begin();
 	while (it != Textures.end()) {
 		SDL_DestroyTexture(it->second);
@@ -27,7 +17,7 @@ RenderScheduler::~RenderScheduler() {
 	}
 }
 
-SDL_Texture* RenderScheduler::GetTexture(const std::string& Path) {
+SDL_Texture* RenderComponent::GetTexture(const std::string& Path) {
 	auto search = Textures.find(Path);
 	if (search != Textures.end()) //found
 		return search->second;
@@ -38,17 +28,17 @@ SDL_Texture* RenderScheduler::GetTexture(const std::string& Path) {
 	}
 }
 
-RenderScheduler::RenderTask::RenderTask(SDL_Texture* texture,
+RenderComponent::RenderTask::RenderTask(SDL_Texture* texture,
   const SDL_Rect& srcrect, const SDL_Rect& dstrect, const double angle,
   const SDL_Point center, const SDL_RendererFlip flip) : texture(texture),
   srcrect(srcrect), dstrect(dstrect), angle(angle), center(center), flip(flip),
   usesRotation(true) {}
 
-RenderScheduler::RenderTask::RenderTask(SDL_Texture* texture,
+RenderComponent::RenderTask::RenderTask(SDL_Texture* texture,
   const SDL_Rect& srcrect, const SDL_Rect& dstrect) : texture(texture),
   srcrect(srcrect), dstrect(dstrect), usesRotation(false) {}
 
-void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
+void RenderComponent::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
   const SDL_Rect srcrect, const Position Pos, const int w, const int h,
   const double angle, const SDL_Point angleCenter, const SDL_RendererFlip flip) {
 	auto sPos = getPositionOnScreen(Pos);
@@ -62,7 +52,7 @@ void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
 	++TaskNum;
 
 }
-void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
+void RenderComponent::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
   const SDL_Rect srcrect, const Position Pos, const int w, const int h) {
 	auto sPos = getPositionOnScreen(Pos);
 	SDL_Rect dstrect = {sPos.first, sPos.second, w, h};
@@ -75,7 +65,7 @@ void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
 	++TaskNum;
 }
 
-void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
+void RenderComponent::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
   const SDL_Rect srcrect, SDL_Rect onScreenInfo) {
 	if (priority < 0)
 		priority = 0;
@@ -86,7 +76,7 @@ void RenderScheduler::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
 	++TaskNum;
 }
 
-void RenderScheduler::Draw() {
+void RenderComponent::Draw() {
 	int nprior = PQueue.size();
 	for (int i = 0; i < nprior; ++i) {
 		while(!PQueue[i].empty()) {
@@ -104,20 +94,20 @@ void RenderScheduler::Draw() {
 	SDL_RenderClear(Renderer);
 }
 
-Camera* const RenderScheduler::GetViewport() {
+Camera* const RenderComponent::GetViewport() {
 	return Viewport;
 }
 
-unsigned int RenderScheduler::getTaskNum() {
+unsigned int RenderComponent::getTaskNum() {
 	return TaskNum;
 }
 
-std::pair<int,int> RenderScheduler::getWindowSize() {
+std::pair<int,int> RenderComponent::getWindowSize() {
 	std::pair<int,int> WS;
 	SDL_GetWindowSize(Window, &WS.first, &WS.second);
 	return WS;
 }
-std::pair<int,int> RenderScheduler::getPositionOnScreen(const Position Local) {
+std::pair<int,int> RenderComponent::getPositionOnScreen(const Position Local) {
 	auto cameraData = Viewport->Get();
 	return std::make_pair(std::get<0>(Local) - std::get<0>(cameraData.P),
 		std::get<1>(Local) - std::get<1>(cameraData.P));

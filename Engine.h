@@ -1,24 +1,33 @@
 #pragma once
-#include "RenderScheduler.h"
+#include "RenderComponent.h"
 #include "Game.h"
-#include "Input.h"
+#include "InputComponent.h"
 #include "ExtraTypes.h"
 #include <chrono>
 #include <vector>
 #include <memory>
 
+namespace EngineUtils {
+	const float getDelta();
+	RenderComponent* getRenderComponent();
+	const std::shared_ptr<Game> getGame(int i = 0);
+	const EngineConfig getConfiguration();
+	InputComponent* getInputComponent();
+}
+
 class Engine {
 	static Engine* instance;
 
 	// ENGINE COMPONENTS:
-	const std::shared_ptr<RenderScheduler> RenderComponent;
+	RenderComponent Renderer;
+	InputComponent Input;
 	std::vector<std::shared_ptr<Game>> GameComponents;
-	const std::unique_ptr<Input> InputComponent;
+
 
 	// RUNTIME INFO:
 	bool Running = true;
 	EngineConfig config;
-	float deltaTime = 0; //last frame length
+	float deltaTime = 1; //last frame length in ms
 
 	int LoadEngineConfig(); //WIP
 
@@ -26,9 +35,7 @@ class Engine {
 	Engine(SDL_Window* Window, SDL_Renderer* Renderer);
 
 	public:
-
 	// Singleton management
-	static inline Engine* getInstance();
 	static Engine* Construct(SDL_Window* Window, SDL_Renderer* Renderer);
 
 	// Events:
@@ -39,8 +46,9 @@ class Engine {
 	int Run();
 
 	// Accesible through other objects
-	static const float getDelta();
-	static std::shared_ptr<RenderScheduler> getRenderScheduler();
-	static const std::shared_ptr<Game> getGame(int i = 0);
-	static const EngineConfig getConfiguration();
+	friend const float EngineUtils::getDelta();
+	friend const EngineConfig EngineUtils::getConfiguration();
+	friend const std::shared_ptr<Game> EngineUtils::getGame(int i);
+	friend InputComponent* EngineUtils::getInputComponent();
+	friend RenderComponent* EngineUtils::getRenderComponent();
 };
