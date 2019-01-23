@@ -224,6 +224,6 @@ void Map::Update() {
 		for (int j = x/Tdim; j < (x+HorizontalPx)/Tdim; ++j) {
 			int index = j + i*MapWidth;
 			SDL_Rect dstrect = {(j*Tdim)-x, (i*Tdim)-y, Tdim, Tdim};
-			RS->ScheduleDraw(1, Levels[Level].Tiles[index].Texture, Levels[Level].Tiles[index].SrcRect, dstrect);
+			RS->ScheduleDraw(1, Levels[Level].Tiles[index].Texture, Levels[Level].Tiles[index].SrcRect, dstrect, std::get<2>((cam.Get()).P));
 		}
 }

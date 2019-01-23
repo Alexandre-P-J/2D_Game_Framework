@@ -29,14 +29,14 @@ SDL_Texture* RenderComponent::GetTexture(const std::string& Path) {
 }
 
 RenderComponent::RenderTask::RenderTask(SDL_Texture* texture,
-  const SDL_Rect& srcrect, const SDL_Rect& dstrect, const double angle,
+  const SDL_Rect& srcrect, const SDL_Rect& dstrect, const int z, const double angle,
   const SDL_Point center, const SDL_RendererFlip flip) : texture(texture),
-  srcrect(srcrect), dstrect(dstrect), angle(angle), center(center), flip(flip),
+  srcrect(srcrect), dstrect(dstrect), z(z), angle(angle), center(center), flip(flip),
   usesRotation(true) {}
 
 RenderComponent::RenderTask::RenderTask(SDL_Texture* texture,
-  const SDL_Rect& srcrect, const SDL_Rect& dstrect) : texture(texture),
-  srcrect(srcrect), dstrect(dstrect), usesRotation(false) {}
+  const SDL_Rect& srcrect, const SDL_Rect& dstrect, const int z) : texture(texture),
+  srcrect(srcrect), dstrect(dstrect), z(z), usesRotation(false) {}
 
 void RenderComponent::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
   const SDL_Rect srcrect, const Position Pos, const int w, const int h,
@@ -47,7 +47,7 @@ void RenderComponent::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
 		priority = 0;
 	else if (priority >= PQueue.size())
 		priority = PQueue.size() - 1;
-	RenderTask T(texture, srcrect, dstrect, angle, angleCenter, flip);
+	RenderTask T(texture, srcrect, dstrect, std::get<2>(Pos), angle, angleCenter, flip);
 	PQueue[priority].push(T);
 	++TaskNum;
 
@@ -60,32 +60,35 @@ void RenderComponent::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
 		priority = 0;
 	else if (priority >= PQueue.size())
 		priority = PQueue.size() - 1;
-	RenderTask T(texture, srcrect, dstrect);
+	RenderTask T(texture, srcrect, dstrect, std::get<2>(Pos));
 	PQueue[priority].push(T);
 	++TaskNum;
 }
 
 void RenderComponent::ScheduleDraw(unsigned int priority, SDL_Texture* texture,
-  const SDL_Rect srcrect, SDL_Rect onScreenInfo) {
+  const SDL_Rect srcrect, SDL_Rect onScreenInfo, const int z) {
 	if (priority < 0)
 		priority = 0;
 	else if (priority >= PQueue.size())
 		priority = PQueue.size() - 1;
-	RenderTask T(texture, srcrect, onScreenInfo);
+	RenderTask T(texture, srcrect, onScreenInfo, z);
 	PQueue[priority].push(T);
 	++TaskNum;
 }
 
 void RenderComponent::Draw() {
 	int nprior = PQueue.size();
+	auto Z = std::get<2>((Viewport->Get()).P);
 	for (int i = 0; i < nprior; ++i) {
 		while(!PQueue[i].empty()) {
 			RenderTask T = PQueue[i].front();
-			if (T.usesRotation)
-				SDL_RenderCopyEx(Renderer, T.texture, &(T.srcrect), &(T.dstrect),
-					T.angle, &(T.center), T.flip);
-			else
-				SDL_RenderCopy(Renderer, T.texture, &(T.srcrect), &(T.dstrect));
+			if (T.z == Z) {
+				if (T.usesRotation)
+					SDL_RenderCopyEx(Renderer, T.texture, &(T.srcrect), &(T.dstrect),
+						T.angle, &(T.center), T.flip);
+				else
+					SDL_RenderCopy(Renderer, T.texture, &(T.srcrect), &(T.dstrect));
+			}
 			PQueue[i].pop();
 			--TaskNum;
 		}

@@ -25,7 +25,7 @@ class Object {
 
 		static void registerType(const std::string& name, ObjectFactory* factory);
 
-		static std::shared_ptr<Object> create(const std::string& name, int game = 0);
+		static std::weak_ptr<Object> create(const std::string& name, int game = 0);
 };
 
 #define REGISTER_TYPE(klass) \

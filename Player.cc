@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include <utility>
 #include "InputComponent.h"
+#include "DebugEnemy.h"
 
 Player::Player() {
 	//LoadPlayer();
@@ -87,12 +88,9 @@ void Player::ON_KeyPressD(Uint8 state) {
 	D_hold = (state == SDL_PRESSED);
 }
 void Player::ON_KeyPressArrowDown(Uint8 state) {
-	/*auto LevelIDinterval = EngineUtils::getGame()->getMapLevelsInterval();
+	auto LevelIDinterval = EngineUtils::getGame()->getMapLevelsInterval();
 	if (std::get<2>(P) > LevelIDinterval.first)
 		std::get<2>(P) -= 1;
-	*/
-	auto enemyptr = Object::create("DebugEnemy", 0);
-	
 }
 void Player::ON_KeyPressArrowUp(Uint8 state) {
 	auto LevelIDinterval = EngineUtils::getGame()->getMapLevelsInterval();
