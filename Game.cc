@@ -11,6 +11,7 @@ Game::Game() {
 	Players.push_back(MainPlayer);
 }
 
+
 std::shared_ptr<Player> Game::getPlayer(int id) {
 	if (id < Players.size())
 		return Players[id];

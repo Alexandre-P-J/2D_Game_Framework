@@ -75,7 +75,7 @@ RenderComponent* EngineUtils::getRenderComponent() {
 	assert(ptr);
 	return &(ptr->Renderer);
 }
-const std::shared_ptr<Game> EngineUtils::getGame(int i) {
+std::shared_ptr<Game> EngineUtils::getGame(int i) {
 	Engine* ptr = Engine::instance;
 	assert(ptr);
 	return ptr->GameComponents[i];

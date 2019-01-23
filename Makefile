@@ -3,7 +3,7 @@ rebuild: clean
 
 all: game.x
 
-obj=main.o Object.o Player.o Map.o RenderComponent.o Camera.o Engine.o Game.o InputComponent.o Animation.o
+obj=main.o Object.o Player.o Map.o RenderComponent.o Camera.o Engine.o Game.o InputComponent.o Animation.o DebugEnemy.o
 flags=-lSDL2 -lSDL2_image -lBox2D -g
 
 game.x: ${obj}
@@ -28,6 +28,8 @@ InputComponent.o: InputComponent.cc
 	g++ ${flags} -c InputComponent.cc -I .
 Animation.o: Animation.cc
 	g++ ${flags} -c Animation.cc -I .
+DebugEnemy.o: DebugEnemy.cc
+	g++ ${flags} -c DebugEnemy.cc -I .
 clean:
 	rm -f *.x
 	rm -f *.o

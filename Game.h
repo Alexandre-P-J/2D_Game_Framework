@@ -8,6 +8,7 @@
 #include <memory>
 
 class Game {
+		friend Object;
 		Map GameMap;
 		std::list<std::shared_ptr<Object>> OBJList;
 		std::vector<std::shared_ptr<Player>> Players;
