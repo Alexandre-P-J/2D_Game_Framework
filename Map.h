@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <list>
 #include <tuple>
 #include <utility>
 #include "Camera.h"
@@ -15,23 +16,21 @@ struct MapTile {
 
 struct MapObject {
 	unsigned int ID;
-	Position Location;
-	SDL_Texture* Texture;
-	SDL_Rect SrcRect;
+	int x, y;
+	std::string type;
 };
 
 struct Level {
 	uint32_t Width, Height;
-	//std::vector<std::tuple<SDL_Texture*, int8_t, int8_t>> Tiles; //ptr,x,y
 	std::vector<MapTile> Tiles;
-	std::vector<MapObject> Objects;
+	std::list<MapObject> Objects;
 
 };
 
 
 class Map {
 		std::vector<Level> Levels;
-		int minLevel;
+		int minLevel = std::numeric_limits<int>::max();
 	public:
 		Map();
 		Map(const std::string& MapFile);

@@ -6,12 +6,28 @@
 #include <list>
 #include "Object.h"
 #include <memory>
+#include "Box2D/Box2D.h"
+#include <cassert>
+
+class GamePhysics {
+	std::vector<b2World> WorldPerLevel;
+	int minlevel;
+public:
+	GamePhysics();
+	GamePhysics(int minlevel, int Nlevels);
+	void Build(int minlevel, int Nlevels);
+	b2World& operator[] (int x);
+};
 
 class Game {
 		friend Object;
-		Map GameMap;
-		std::list<std::shared_ptr<Object>> OBJList;
-		std::vector<std::shared_ptr<Player>> Players;
+
+		Map MapSnapshot; // Copy more or less updated of the map file
+
+		// Working Map information
+		GamePhysics WorkingMap;
+		std::map<int,std::shared_ptr<Object>> Objects; //<uuid, ptr>
+		std::vector<std::weak_ptr<Object>> Players;
 
 		void UpdateObjects();
 
@@ -19,8 +35,11 @@ class Game {
 		Game();
 
 		void Update();
+		std::vector<b2World*> getPhysicsToUpdate();
 
-		std::shared_ptr<Player> getPlayer(int id);
+		void MapSnapshotToWorkingMap();
+
+		std::weak_ptr<Object> getPlayer(int id);
 		std::pair<uint32_t,uint32_t> getMapSize(const int z) const;
 		std::pair<int,int> getMapLevelsInterval() const;
 };

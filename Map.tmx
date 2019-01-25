@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="116" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="7">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="116" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="25">
  <tileset firstgid="1" name="ExampleTileset" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="wood_tileset.png" width="512" height="512"/>
  </tileset>
@@ -23214,14 +23214,6 @@
    <tile/>
   </data>
  </layer>
- <objectgroup id="12" name="Object Layer 1" visible="0">
-  <object id="1" gid="20" x="161.333" y="100" width="32" height="32"/>
-  <object id="2" gid="20" x="77.3333" y="79.3333" width="32" height="32"/>
-  <object id="3" gid="20" x="116" y="149.333" width="32" height="32"/>
-  <object id="4" gid="20" x="110.667" y="107.333" width="32" height="32"/>
-  <object id="5" gid="20" x="111.333" y="80" width="32" height="32"/>
-  <object id="6" gid="20" x="222.667" y="91.3333" width="32" height="32"/>
- </objectgroup>
  <layer id="11" name="-1" width="100" height="116">
   <data>
    <tile gid="1"/>
@@ -23236,6 +23228,7 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23335,6 +23328,7 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23433,6 +23427,8 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23522,12 +23518,16 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23616,6 +23616,9 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23623,6 +23626,8 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23711,6 +23716,7 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23720,6 +23726,7 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23818,6 +23825,8 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -23915,6 +23924,8 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -24011,28 +24022,9 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -24126,11 +24118,11 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
-   <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -24143,16 +24135,14 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="18"/>
    <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="1"/>
    <tile gid="18"/>
    <tile gid="1"/>
+   <tile gid="2"/>
    <tile gid="1"/>
+   <tile gid="18"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -24226,7 +24216,9 @@
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
-   <tile gid="1"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
+   <tile gid="20"/>
    <tile gid="1"/>
    <tile gid="1"/>
    <tile gid="1"/>
@@ -34826,4 +34818,13 @@
    <tile gid="1"/>
   </data>
  </layer>
+ <objectgroup id="14" name="-1_Objects">
+  <object id="23" name="Player" x="681" y="518">
+   <point/>
+  </object>
+  <object id="24" name="DebugEnemy" x="584" y="254">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="15" name="0_Objects"/>
 </map>

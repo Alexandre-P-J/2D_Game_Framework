@@ -10,7 +10,7 @@
 namespace EngineUtils {
 	const float getDelta();
 	RenderComponent* getRenderComponent();
-	std::shared_ptr<Game> getGame(int i = 0);
+	std::shared_ptr<Game> getGame();
 	const EngineConfig getConfiguration();
 	InputComponent* getInputComponent();
 }
@@ -21,7 +21,7 @@ class Engine {
 	// ENGINE COMPONENTS:
 	RenderComponent Renderer;
 	InputComponent Input;
-	std::vector<std::shared_ptr<Game>> GameComponents;
+	std::shared_ptr<Game> GameComponent;
 
 
 	// RUNTIME INFO:
@@ -48,7 +48,7 @@ class Engine {
 	// Accesible through other objects
 	friend const float EngineUtils::getDelta();
 	friend const EngineConfig EngineUtils::getConfiguration();
-	friend std::shared_ptr<Game> EngineUtils::getGame(int i);
+	friend std::shared_ptr<Game> EngineUtils::getGame();
 	friend InputComponent* EngineUtils::getInputComponent();
 	friend RenderComponent* EngineUtils::getRenderComponent();
 };

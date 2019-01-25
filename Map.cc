@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cassert>
 #include "Engine.h"
+#include <limits>
 
 using namespace rapidxml;
 
@@ -97,18 +98,25 @@ void Map::Reload(const std::string& MapFile) {
 	std::vector<xml_node<>*> TileTexures;
 	std::vector<xml_node<>*> TileBehaviours;
 	std::vector<xml_node<>*> TileObjects;
-	while(pNode0) {
+	while (pNode0) {
 		std::string name = pNode0->first_attribute("name")->value();
 		if (name.find("Behaviour") != std::string::npos)
 			TileBehaviours.push_back(pNode0);
-		else if (name.find("Object") != std::string::npos)
-			TileObjects.push_back(pNode0);
 		else if (name.find_first_not_of("-0123456789") == std::string::npos) {
 			TileTexures.push_back(pNode0);
 			minLevel = std::min(minLevel, stosi(name));
 		}
 		pNode0 = pNode0->next_sibling("layer");
 	}
+	// Parsing object groups
+	pNode0 = pRoot->first_node("objectgroup");
+	while (pNode0) {
+		std::string name = pNode0->first_attribute("name")->value();
+		if (name.find("Object") != std::string::npos)
+			TileObjects.push_back(pNode0);
+		pNode0 = pNode0->next_sibling("objectgroup");
+	}
+
 
 	//Parsing Layers Step2.1: writing Texture and SrcRect in Levels vector
 	std::vector<Level> tmp(TileTexures.size());
@@ -176,8 +184,23 @@ void Map::Reload(const std::string& MapFile) {
 	}
 
 	//Parsing Objects
-	//WIP
+	for (auto & element : TileObjects) {
+		int index = stosi(element->first_attribute("name")->value()) - minLevel; //stosi shall omit non numeric and non '-'
+		pNode0 = element->first_node("object");
+		while (pNode0) {
+			MapObject obj;
+			obj.ID = std::stoi(pNode0->first_attribute("id")->value());
+			auto attr = pNode0->first_attribute("name");
+			if (attr)
+				obj.type = attr->value();
+			obj.x = stosi(pNode0->first_attribute("x")->value());
+			obj.y = stosi(pNode0->first_attribute("y")->value());
 
+			Levels[index].Objects.push_back(obj);
+
+			pNode0 = pNode0->next_sibling("object");
+		}
+	}
 }
 
 

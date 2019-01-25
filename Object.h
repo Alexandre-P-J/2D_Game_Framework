@@ -3,6 +3,7 @@
 #include "Animation.h"
 #include <map>
 #include <memory>
+#include <iostream>
 
 class Object;
 
@@ -11,21 +12,23 @@ public:
     virtual std::shared_ptr<Object> create() = 0;
 };
 
+
+
 class Object {
 	protected:
 		Position P;
 		Rotation R;
 	private:
-		bool visible = true;
+		static std::map<std::string,ObjectFactory*>& getFactories(); //Singleton
 	public:
 		Position getPosition() const;
+		void setPosition(Position P);
 		virtual bool Update() = 0;
-
-		static std::map<std::string,ObjectFactory*> factories;
 
 		static void registerType(const std::string& name, ObjectFactory* factory);
 
-		static std::weak_ptr<Object> create(const std::string& name, int game = 0);
+		static std::weak_ptr<Object> create(const std::string& name);
+		static std::weak_ptr<Object> create(const std::string& name, int uuid);
 };
 
 #define REGISTER_TYPE(klass) \

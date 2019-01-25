@@ -12,7 +12,7 @@ Engine* Engine::Construct(SDL_Window* Window, SDL_Renderer* Renderer) {
 	if (instance)
 		delete instance;
 	instance = new Engine(Window, Renderer);
-	instance->GameComponents.push_back(std::make_shared<Game>());
+	instance->GameComponent = std::make_shared<Game>();
 	return instance;
 }
 
@@ -42,12 +42,12 @@ void Engine::ONWindowResize() {
 }
 
 int Engine::Run() {
+	GameComponent->MapSnapshotToWorkingMap();
 	do {
 		//FRAME TIME START
 		auto frame_start = std::chrono::steady_clock::now();
 		//GAME UPDATE
-		for (auto p : GameComponents)
-			p->Update();
+		GameComponent->Update();
 		//DRAW
 		Renderer.Draw();
 		// INPUT
@@ -75,10 +75,10 @@ RenderComponent* EngineUtils::getRenderComponent() {
 	assert(ptr);
 	return &(ptr->Renderer);
 }
-std::shared_ptr<Game> EngineUtils::getGame(int i) {
+std::shared_ptr<Game> EngineUtils::getGame() {
 	Engine* ptr = Engine::instance;
 	assert(ptr);
-	return ptr->GameComponents[i];
+	return ptr->GameComponent;
 }
 const EngineConfig EngineUtils::getConfiguration() {
 	Engine* ptr = Engine::instance;

@@ -3,10 +3,11 @@
 #include "Engine.h"
 #include <utility>
 #include "InputComponent.h"
-#include "DebugEnemy.h"
+#include <cmath>
 
 Player::Player() {
 	//LoadPlayer();
+	std::cout << "Hello" << std::endl;
 	P = std::make_tuple(0, 0, -1);
 	auto InputComponent = EngineUtils::getInputComponent();
 	Bindings.push_back(InputComponent->InputBind(SDLK_w, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressW)));
@@ -44,35 +45,24 @@ bool Player::Update() {
 }
 
 void Player::Movement() {
-	std::pair<int,int> dir = {0, 0};
-	if (W_hold) {
-		std::get<1>(P) -= Speed*EngineUtils::getDelta();
-		dir.second -= 1;
-		R = 0;
+	int dx = 0;
+	int dy = 0;
+	auto movement = Speed*EngineUtils::getDelta();
+	if (W_hold)
+		dy -= movement;
+	if (A_hold)
+		dx -= movement;
+	if (S_hold)
+		dy += movement;
+	if (D_hold)
+		dx += movement;
+	if (dx || dy) {
+		float m = std::sqrt(dx*dx+dy*dy);
+		std::get<0>(P) += dx/m;
+		std::get<1>(P) += dy/m;
+		double angleInRadians = std::atan2(dy, dx);
+		R = (angleInRadians / M_PI) * 180.0 + 90;
 	}
-	if (A_hold) {
-		std::get<0>(P) -= Speed*EngineUtils::getDelta();
-		dir.first -= 1;
-		R = 270;
-	}
-	if (S_hold) {
-		std::get<1>(P) += Speed*EngineUtils::getDelta();
-		dir.second += 1;
-		R = 180;
-	}
-	if (D_hold) {
-		std::get<0>(P) += Speed*EngineUtils::getDelta();
-		dir.first += 1;
-		R = 90;
-	}
-	if (dir == std::pair<int,int>(1, -1))
-		R = 45;
-	else if (dir == std::pair<int,int>(-1, -1))
-		R = 315;
-	else if (dir == std::pair<int,int>(1, 1))
-		R = 135;
-	else if (dir == std::pair<int,int>(-1, 1))
-		R = 225;
 }
 
 void Player::ON_KeyPressW(Uint8 state) {
