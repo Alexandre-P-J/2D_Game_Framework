@@ -5,7 +5,7 @@
 class DebugEnemy : public Object {
 	Animation anim;
 public:
-	DebugEnemy();
+	DebugEnemy(b2Body* Body);
 	bool Update();
 };
 

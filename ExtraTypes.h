@@ -3,7 +3,7 @@
 #include <valarray>
 #include <cmath>
 
-typedef std::tuple<double, double, int16_t> Position;
+typedef std::tuple<float, float, int16_t> Position;
 typedef std::valarray<uint32_t> IntVec;
 
 

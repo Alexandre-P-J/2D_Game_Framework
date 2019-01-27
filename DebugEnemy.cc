@@ -3,8 +3,9 @@
 #include <vector>
 #include <iostream>
 
-DebugEnemy::DebugEnemy() {
-	P = std::make_tuple(0, 0, 0);
+DebugEnemy::DebugEnemy(b2Body* Body) {
+	this->Body = Body;
+	
 	auto tex = EngineUtils::getRenderComponent()->GetTexture("TestDot.png");
 	SDL_Rect first = {0, 0, 32, 32};
 	std::vector<float> timing(1, 100);
@@ -13,6 +14,6 @@ DebugEnemy::DebugEnemy() {
 }
 
 bool DebugEnemy::Update() {
-	anim(P, R, 10);
+	anim(getPosition(), R, 10);
 	return true;
 }

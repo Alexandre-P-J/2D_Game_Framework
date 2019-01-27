@@ -48,6 +48,14 @@ int Engine::Run() {
 		auto frame_start = std::chrono::steady_clock::now();
 		//GAME UPDATE
 		GameComponent->Update();
+		//PHYSICS
+		auto Worlds = GameComponent->getPhysicsToUpdate();
+		float timeStep = 1.0 / 60;
+        int velocityIterations = 6;
+        int positionIterations = 2;
+		for (auto World : Worlds) {
+			World->Step(timeStep, velocityIterations, positionIterations);
+		}
 		//DRAW
 		Renderer.Draw();
 		// INPUT

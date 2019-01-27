@@ -10,7 +10,7 @@ class Object;
 
 class ObjectFactory {
 public:
-    virtual std::shared_ptr<Object> create() = 0;
+    virtual std::shared_ptr<Object> create(b2Body* Body) = 0;
 };
 
 
@@ -18,7 +18,7 @@ public:
 class Object {
 	protected:
 		b2Body* Body = nullptr;
-		Position P;
+		int16_t LevelZCoordinate;
 		Rotation R;
 	private:
 		static std::map<std::string,ObjectFactory*>& getFactories(); //Singleton
@@ -29,8 +29,8 @@ class Object {
 
 		static void registerType(const std::string& name, ObjectFactory* factory);
 
-		static std::weak_ptr<Object> create(const std::string& name);
-		static std::weak_ptr<Object> create(const std::string& name, int uuid);
+		static std::weak_ptr<Object> create(const std::string& name, Position Pos);
+		static std::weak_ptr<Object> create(const std::string& name, Position Pos, int uuid);
 };
 
 #define REGISTER_TYPE(klass) \
@@ -40,8 +40,8 @@ class Object {
         { \
             Object::registerType(#klass, this); \
         } \
-        virtual std::shared_ptr<Object> create() { \
-            return std::shared_ptr<klass>(new klass()); \
+        virtual std::shared_ptr<Object> create(b2Body* Body) { \
+            return std::shared_ptr<klass>(new klass(Body)); \
         } \
     }; \
     static klass##Factory global_##klass##Factory;

@@ -26,17 +26,18 @@ class Player : public Object {
 		// Load
 		void LoadPlayer(); //WIP
 	public:
-		Player();
+		Player(b2Body* Body);
 		// General
 		bool Update();
-		void Movement();
+
+		//void Movement();
 		// Events
-		void ON_KeyPressW(Uint8 state);
-		void ON_KeyPressA(Uint8 state);
-		void ON_KeyPressS(Uint8 state);
-		void ON_KeyPressD(Uint8 state);
-		void ON_KeyPressArrowDown(Uint8 state);
-		void ON_KeyPressArrowUp(Uint8 state);
+		//void ON_KeyPressW(Uint8 state);
+		//void ON_KeyPressA(Uint8 state);
+		//void ON_KeyPressS(Uint8 state);
+		//void ON_KeyPressD(Uint8 state);
+		//void ON_KeyPressArrowDown(Uint8 state);
+		//void ON_KeyPressArrowUp(Uint8 state);
 };
 
 REGISTER_TYPE(Player)

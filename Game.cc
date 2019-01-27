@@ -28,10 +28,8 @@ void Game::MapSnapshotToWorkingMap() {
 	for (int i = interval.first; i <= interval.second; ++i) {
 		auto levelPtr = MapSnapshot.getLevel(i);
 		for (auto obj : levelPtr->Objects) {
-			auto Wptr = Object::create(obj.type, obj.ID); // added to the object map automatically
-			auto Sptr = Wptr.lock(); // is valid, no check needed
 			Position P = {obj.x, obj.y, i};
-			Sptr->setPosition(P);
+			Object::create(obj.type, P, obj.ID);
 		}
 	}
 }

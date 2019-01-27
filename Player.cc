@@ -5,52 +5,45 @@
 #include "InputComponent.h"
 #include <cmath>
 
-Player::Player() {
+Player::Player(b2Body* Body) {
+	this->Body = Body;
+	Body->SetType(b2_dynamicBody);
 	//LoadPlayer();
 
-	b2BodyDef* BodyDef = new b2BodyDef();
-	BodyDef->position.Set(0, 0);
-	//b2Vec2 g = {0, 0};
-	//b2World w(g);
-	//w.CreateBody(BodyDef);
-	//EngineUtils::getGame().lock()->getWorldFromLevel(-1)->ClearForces();
-	//EngineUtils::getGame().lock()->getWorldFromLevel(-1)->CreateBody(BodyDef);
-
-	P = std::make_tuple(0, 0, -1);
-	auto InputComponent = EngineUtils::getInputComponent();
-	Bindings.push_back(InputComponent->InputBind(SDLK_w, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressW)));
+	//P = std::make_tuple(0, 0, -1);
+	//auto InputComponent = EngineUtils::getInputComponent();
+	/*Bindings.push_back(InputComponent->InputBind(SDLK_w, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressW)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_a, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressA)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_s, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressS)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_d, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressD)));
 
 	Bindings.push_back(InputComponent->InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_UP, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowUp)));
-
+	*/
 	auto texture = EngineUtils::getRenderComponent()->GetTexture("runner-export.png");
 	SDL_Rect first = {0, 0, 128, 128};
 	std::vector<float> v = {150, 100, 140, 150, 100, 140};
 	Animations[WalkR].Construct(texture, first, 6, v);
 	Animations[WalkR].SetResize(64, 0);
-
 }
 
 
 
 bool Player::Update() {
-	Movement();
+//Movement();
 	// Update Viewport with Player position
 	auto Econf = EngineUtils::getConfiguration();
-	auto MapSize = EngineUtils::getGame().lock()->getMapSize(std::get<2>(P));
-	EngineUtils::getRenderComponent()->GetViewport()->Update(P, Econf.WsizeX, Econf.WsizeY, MapSize.first, MapSize.second);
+	auto MapSize = EngineUtils::getGame().lock()->getMapSize(LevelZCoordinate);
+	EngineUtils::getRenderComponent()->GetViewport()->Update(getPosition(), Econf.WsizeX, Econf.WsizeY, MapSize.first, MapSize.second);
 
 
 
 	// TESTING:
-	Animations[WalkR](P, R, 5);
+	Animations[WalkR](getPosition(), R, 5);
 
 	return true;
 }
-
+/*
 void Player::Movement() {
 	int dx = 0;
 	int dy = 0;
@@ -94,3 +87,4 @@ void Player::ON_KeyPressArrowUp(Uint8 state) {
 	if (std::get<2>(P) < LevelIDinterval.second)
 		std::get<2>(P) += 1;
 }
+*/
