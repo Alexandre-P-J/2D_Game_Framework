@@ -6,7 +6,7 @@
 
 class Player : public Object {
 		// General:
-		float Speed = 0.2;
+		float WalkSpeed = 15;
 		// Animations:
 		enum AnimationType {WalkF = 0, WalkR, WalkB, WalkL, IdleF, IdleR, IdleB,
 			IdleL, ANIMATION_COUNT};
@@ -30,14 +30,14 @@ class Player : public Object {
 		// General
 		bool Update();
 
-		//void Movement();
+		void Movement();
 		// Events
-		//void ON_KeyPressW(Uint8 state);
-		//void ON_KeyPressA(Uint8 state);
-		//void ON_KeyPressS(Uint8 state);
-		//void ON_KeyPressD(Uint8 state);
-		//void ON_KeyPressArrowDown(Uint8 state);
-		//void ON_KeyPressArrowUp(Uint8 state);
+		void ON_KeyPressW(Uint8 state);
+		void ON_KeyPressA(Uint8 state);
+		void ON_KeyPressS(Uint8 state);
+		void ON_KeyPressD(Uint8 state);
+		/*void ON_KeyPressArrowDown(Uint8 state);
+		void ON_KeyPressArrowUp(Uint8 state);*/
 };
 
 REGISTER_TYPE(Player)

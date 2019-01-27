@@ -5,7 +5,10 @@
 
 DebugEnemy::DebugEnemy(b2Body* Body) {
 	this->Body = Body;
-	
+	b2PolygonShape Shape;
+	Shape.SetAsBox(16, 16);
+	Body->CreateFixture(&Shape, 0);
+
 	auto tex = EngineUtils::getRenderComponent()->GetTexture("TestDot.png");
 	SDL_Rect first = {0, 0, 32, 32};
 	std::vector<float> timing(1, 100);

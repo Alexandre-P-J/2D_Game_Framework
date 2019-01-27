@@ -8,15 +8,20 @@
 Player::Player(b2Body* Body) {
 	this->Body = Body;
 	Body->SetType(b2_dynamicBody);
+	b2PolygonShape Shape;
+	Shape.SetAsBox(5, 5);
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &Shape;
+	fixtureDef.density = 1;
+	Body->CreateFixture(&fixtureDef);
 	//LoadPlayer();
 
-	//P = std::make_tuple(0, 0, -1);
-	//auto InputComponent = EngineUtils::getInputComponent();
-	/*Bindings.push_back(InputComponent->InputBind(SDLK_w, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressW)));
+	auto InputComponent = EngineUtils::getInputComponent();
+	Bindings.push_back(InputComponent->InputBind(SDLK_w, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressW)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_a, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressA)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_s, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressS)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_d, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressD)));
-
+	/*
 	Bindings.push_back(InputComponent->InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_UP, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowUp)));
 	*/
@@ -30,7 +35,7 @@ Player::Player(b2Body* Body) {
 
 
 bool Player::Update() {
-//Movement();
+Movement();
 	// Update Viewport with Player position
 	auto Econf = EngineUtils::getConfiguration();
 	auto MapSize = EngineUtils::getGame().lock()->getMapSize(LevelZCoordinate);
@@ -43,26 +48,23 @@ bool Player::Update() {
 
 	return true;
 }
-/*
+
 void Player::Movement() {
-	int dx = 0;
-	int dy = 0;
-	auto movement = Speed*EngineUtils::getDelta();
+	b2Vec2 Speed = {0, 0};
+	auto movement = WalkSpeed*EngineUtils::getDelta();
 	if (W_hold)
-		dy -= movement;
+		Speed.y -= movement;
 	if (A_hold)
-		dx -= movement;
+		Speed.x -= movement;
 	if (S_hold)
-		dy += movement;
+		Speed.y += movement;
 	if (D_hold)
-		dx += movement;
-	if (dx || dy) {
-		float m = std::sqrt(dx*dx+dy*dy);
-		std::get<0>(P) += dx/m;
-		std::get<1>(P) += dy/m;
-		double angleInRadians = std::atan2(dy, dx);
+		Speed.x += movement;
+	if (Speed.x || Speed.y) {
+		double angleInRadians = std::atan2(Speed.y, Speed.x);
 		R = (angleInRadians / M_PI) * 180.0 + 90;
 	}
+	Body->SetLinearVelocity(Speed);
 }
 
 void Player::ON_KeyPressW(Uint8 state) {
@@ -76,7 +78,7 @@ void Player::ON_KeyPressS(Uint8 state) {
 }
 void Player::ON_KeyPressD(Uint8 state) {
 	D_hold = (state == SDL_PRESSED);
-}
+}/*
 void Player::ON_KeyPressArrowDown(Uint8 state) {
 	auto LevelIDinterval = EngineUtils::getGame().lock()->getMapLevelsInterval();
 	if (std::get<2>(P) > LevelIDinterval.first)
