@@ -19,12 +19,13 @@ class Object {
 	protected:
 		b2Body* Body = nullptr;
 		int16_t LevelZCoordinate;
-		Rotation R;
 	private:
 		static std::map<std::string,ObjectFactory*>& getFactories(); //Singleton
 	public:
 		Position getPosition() const;
+		Rotation getRotation() const;
 		void setPosition(Position P);
+		void setRotation(Rotation R);
 		virtual bool Update() = 0;
 
 		static void registerType(const std::string& name, ObjectFactory* factory);

@@ -8,11 +8,11 @@ typedef std::valarray<uint32_t> IntVec;
 
 
 class Rotation {
-	double value = 0;
+	float value = 0;
 public:
 	Rotation() : value(std::fmod(value, 360)) {};
-	double ToDouble() const {return value;}
-	Rotation operator=(double v) {value = std::fmod(v, 360); return *this;};
+	float get() const {return value;}
+	Rotation operator=(float v) {value = std::fmod(v, 360); return *this;};
 };
 
 struct EngineConfig {

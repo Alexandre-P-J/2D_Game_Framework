@@ -89,9 +89,10 @@ void Animation::operator()(Position Pos, Rotation r, int DrawPriority) {
 	if (initialized) {
 		auto srcrect = UpdateSprite();
 		auto WH = UpdateSize();
+		Position PosCentered = {std::get<0>(Pos)-WH.first/2, std::get<1>(Pos)-WH.second/2, std::get<2>(Pos)};
 		//Engine::getRenderComponent()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second);
 		SDL_Point center = {WH.first/2, WH.second/2};
-		EngineUtils::getRenderComponent()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, Pos, WH.first, WH.second, r.ToDouble(), center, SDL_FLIP_NONE);
+		EngineUtils::getRenderComponent()->ScheduleDraw(DrawPriority, SpriteSheet, srcrect, PosCentered, WH.first, WH.second, r.get(), center, SDL_FLIP_NONE);
 	}
 }
 

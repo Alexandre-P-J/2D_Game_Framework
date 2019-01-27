@@ -34819,10 +34819,10 @@
   </data>
  </layer>
  <objectgroup id="14" name="-1_Objects">
-  <object id="23" name="Player" x="681" y="518">
+  <object id="23" name="Player" x="501" y="271">
    <point/>
   </object>
-  <object id="24" name="DebugEnemy" x="584" y="254">
+  <object id="24" name="DebugEnemy" x="569" y="350">
    <point/>
   </object>
  </objectgroup>

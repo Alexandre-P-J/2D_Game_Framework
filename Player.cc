@@ -8,8 +8,8 @@
 Player::Player(b2Body* Body) {
 	this->Body = Body;
 	Body->SetType(b2_dynamicBody);
-	b2PolygonShape Shape;
-	Shape.SetAsBox(5, 5);
+	b2CircleShape Shape;
+	Shape.m_radius = 14;
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &Shape;
 	fixtureDef.density = 1;
@@ -41,10 +41,8 @@ Movement();
 	auto MapSize = EngineUtils::getGame().lock()->getMapSize(LevelZCoordinate);
 	EngineUtils::getRenderComponent()->GetViewport()->Update(getPosition(), Econf.WsizeX, Econf.WsizeY, MapSize.first, MapSize.second);
 
-
-
 	// TESTING:
-	Animations[WalkR](getPosition(), R, 5);
+	Animations[WalkR](getPosition(), getRotation(), 5);
 
 	return true;
 }
@@ -62,7 +60,9 @@ void Player::Movement() {
 		Speed.x += movement;
 	if (Speed.x || Speed.y) {
 		double angleInRadians = std::atan2(Speed.y, Speed.x);
-		R = (angleInRadians / M_PI) * 180.0 + 90;
+		Rotation Rot;
+		Rot = (angleInRadians / M_PI) * 180.0 + 90;
+		setRotation(Rot);
 	}
 	Body->SetLinearVelocity(Speed);
 }

@@ -51,8 +51,20 @@ Position Object::getPosition() const {
 	return Pos;
 }
 
+Rotation Object::getRotation() const {
+	assert(Body); // this not ensures Body validity
+	Rotation Rot;
+	Rot = Body->GetAngle();
+	return Rot;
+}
+
 void Object::setPosition(Position P) { //WIP, IF Z CHANGES WE ARE FKED
 	assert(Body); // this not ensures Body validity
 	b2Vec2 pos = {std::get<0>(P), std::get<1>(P)};
 	Body->SetTransform(pos, Body->GetAngle());
+}
+
+void Object::setRotation(Rotation R) {
+	assert(Body); // this not ensures Body validity
+	Body->SetTransform(Body->GetPosition(), R.get());
 }
