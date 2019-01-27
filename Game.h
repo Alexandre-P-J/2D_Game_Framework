@@ -10,13 +10,13 @@
 #include <cassert>
 
 class GamePhysics {
-	std::vector<b2World> WorldPerLevel;
+	std::vector<b2World*> WorldPerLevel;
 	int minlevel;
 public:
 	GamePhysics();
 	GamePhysics(int minlevel, int Nlevels);
 	void Build(int minlevel, int Nlevels);
-	b2World& operator[] (int x);
+	b2World* operator[] (int x);
 };
 
 class Game {
@@ -39,6 +39,7 @@ class Game {
 
 		void MapSnapshotToWorkingMap();
 
+		b2World* getWorldFromLevel(int z);
 		std::weak_ptr<Object> getPlayer(int id);
 		std::pair<uint32_t,uint32_t> getMapSize(const int z) const;
 		std::pair<int,int> getMapLevelsInterval() const;

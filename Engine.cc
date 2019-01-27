@@ -75,10 +75,10 @@ RenderComponent* EngineUtils::getRenderComponent() {
 	assert(ptr);
 	return &(ptr->Renderer);
 }
-std::shared_ptr<Game> EngineUtils::getGame() {
+std::weak_ptr<Game> EngineUtils::getGame() {
 	Engine* ptr = Engine::instance;
 	assert(ptr);
-	return ptr->GameComponent;
+	return std::weak_ptr<Game>(ptr->GameComponent);
 }
 const EngineConfig EngineUtils::getConfiguration() {
 	Engine* ptr = Engine::instance;

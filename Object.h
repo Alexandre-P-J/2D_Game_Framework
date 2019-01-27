@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <iostream>
+#include "Box2D/Box2D.h"
 
 class Object;
 
@@ -16,6 +17,7 @@ public:
 
 class Object {
 	protected:
+		b2Body* Body = nullptr;
 		Position P;
 		Rotation R;
 	private:

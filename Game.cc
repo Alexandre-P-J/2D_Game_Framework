@@ -6,13 +6,13 @@
 
 GamePhysics::GamePhysics() {}
 GamePhysics::GamePhysics(int minlevel, int Nlevels) :
-	WorldPerLevel(Nlevels, b2Vec2(0, 0)), minlevel(minlevel) {}
+	WorldPerLevel(Nlevels, new b2World(b2Vec2(0, 0))), minlevel(minlevel) {}
 
 void GamePhysics::Build(int minlevel, int Nlevels) {
 	this->minlevel = minlevel;
-	WorldPerLevel = std::vector<b2World>(Nlevels, b2Vec2(0, 0));
+	WorldPerLevel = std::vector<b2World*>(Nlevels, new b2World(b2Vec2(0, 0)));
 }
-b2World& GamePhysics::operator[] (int x) {
+b2World* GamePhysics::operator[] (int x) {
 	return WorldPerLevel[x-minlevel];
 }
 
@@ -50,11 +50,15 @@ void Game::Update() {
 void Game::UpdateObjects() {
 	auto it = Objects.begin();
 	while (it != Objects.end()) {
-		if ((*it).second->Update())
+		if (it->second->Update())
 			++it;
 		else
 			it = Objects.erase(it);
 	}
+}
+
+b2World* Game::getWorldFromLevel(int z) {
+	return WorkingMap[z];
 }
 
 std::pair<uint32_t,uint32_t> Game::getMapSize(const int z) const {
@@ -74,7 +78,7 @@ std::vector<b2World*> Game::getPhysicsToUpdate() {
 		if (sptr) {
 			int Z = std::get<2>(sptr->getPosition());
 			if (checkin.find(Z) == checkin.end()) {
-				result.push_back(&WorkingMap[Z]);
+				result.push_back(WorkingMap[Z]);
 				checkin.insert(Z);
 			}
 		}

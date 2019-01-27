@@ -7,7 +7,15 @@
 
 Player::Player() {
 	//LoadPlayer();
-	std::cout << "Hello" << std::endl;
+
+	b2BodyDef* BodyDef = new b2BodyDef();
+	BodyDef->position.Set(0, 0);
+	//b2Vec2 g = {0, 0};
+	//b2World w(g);
+	//w.CreateBody(BodyDef);
+	//EngineUtils::getGame().lock()->getWorldFromLevel(-1)->ClearForces();
+	//EngineUtils::getGame().lock()->getWorldFromLevel(-1)->CreateBody(BodyDef);
+
 	P = std::make_tuple(0, 0, -1);
 	auto InputComponent = EngineUtils::getInputComponent();
 	Bindings.push_back(InputComponent->InputBind(SDLK_w, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressW)));
@@ -30,10 +38,9 @@ Player::Player() {
 
 bool Player::Update() {
 	Movement();
-
 	// Update Viewport with Player position
 	auto Econf = EngineUtils::getConfiguration();
-	auto MapSize = EngineUtils::getGame()->getMapSize(std::get<2>(P));
+	auto MapSize = EngineUtils::getGame().lock()->getMapSize(std::get<2>(P));
 	EngineUtils::getRenderComponent()->GetViewport()->Update(P, Econf.WsizeX, Econf.WsizeY, MapSize.first, MapSize.second);
 
 
@@ -78,12 +85,12 @@ void Player::ON_KeyPressD(Uint8 state) {
 	D_hold = (state == SDL_PRESSED);
 }
 void Player::ON_KeyPressArrowDown(Uint8 state) {
-	auto LevelIDinterval = EngineUtils::getGame()->getMapLevelsInterval();
+	auto LevelIDinterval = EngineUtils::getGame().lock()->getMapLevelsInterval();
 	if (std::get<2>(P) > LevelIDinterval.first)
 		std::get<2>(P) -= 1;
 }
 void Player::ON_KeyPressArrowUp(Uint8 state) {
-	auto LevelIDinterval = EngineUtils::getGame()->getMapLevelsInterval();
+	auto LevelIDinterval = EngineUtils::getGame().lock()->getMapLevelsInterval();
 	if (std::get<2>(P) < LevelIDinterval.second)
 		std::get<2>(P) += 1;
 }
