@@ -61,7 +61,11 @@ Rotation Object::getRotation() const {
 void Object::setPosition(Position P) { //WIP, IF Z CHANGES WE ARE FKED
 	assert(Body); // this not ensures Body validity
 	b2Vec2 pos = {std::get<0>(P), std::get<1>(P)};
-	Body->SetTransform(pos, Body->GetAngle());
+	if (std::get<2>(P) == LevelZCoordinate)
+		Body->SetTransform(pos, Body->GetAngle());
+	else {
+		assert("U FCKED, Body trasportation through worlds not yet implemented");
+	}
 }
 
 void Object::setRotation(Rotation R) {

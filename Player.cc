@@ -21,6 +21,7 @@ Player::Player(b2Body* Body) {
 	Bindings.push_back(InputComponent->InputBind(SDLK_a, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressA)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_s, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressS)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_d, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressD)));
+	Bindings.push_back(InputComponent->InputBind(SDLK_e, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressE)));
 	/*
 	Bindings.push_back(InputComponent->InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_UP, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowUp)));
@@ -38,7 +39,7 @@ bool Player::Update() {
 Movement();
 	// Update Viewport with Player position
 	auto Econf = EngineUtils::getConfiguration();
-	auto MapSize = EngineUtils::getGame().lock()->getMapSize(LevelZCoordinate);
+	auto MapSize = EngineUtils::getGame().lock()->getMapSize(std::get<2>(getPosition()));
 	EngineUtils::getRenderComponent()->GetViewport()->Update(getPosition(), Econf.WsizeX, Econf.WsizeY, MapSize.first, MapSize.second);
 
 	// TESTING:
@@ -78,6 +79,11 @@ void Player::ON_KeyPressS(Uint8 state) {
 }
 void Player::ON_KeyPressD(Uint8 state) {
 	D_hold = (state == SDL_PRESSED);
+}
+void Player::ON_KeyPressE(Uint8 state) {
+	if (state == SDL_PRESSED) {
+		Object::create("DebugEnemy", getPosition());
+	}
 }/*
 void Player::ON_KeyPressArrowDown(Uint8 state) {
 	auto LevelIDinterval = EngineUtils::getGame().lock()->getMapLevelsInterval();

@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <iostream>
 #include <set>
+#include "Box2D/Box2D.h"
 
 GamePhysics::GamePhysics() {}
 GamePhysics::GamePhysics(int minlevel, int Nlevels) :
@@ -26,6 +27,34 @@ Game::Game() {
 void Game::MapSnapshotToWorkingMap() {
 	auto interval = getMapLevelsInterval();
 	for (int i = interval.first; i <= interval.second; ++i) {
+		//Creating 4 invisible walls at the ends of the level
+		auto worldPTR = getWorldFromLevel(i);
+		auto MapSize = getMapSize(i);
+		b2BodyDef BDefL;
+		b2BodyDef BDefT;
+		b2BodyDef BDefR;
+		b2BodyDef BDefB;
+		BDefL.position.Set(-16, MapSize.second/2);
+		BDefT.position.Set(MapSize.first/2, -16);
+		BDefR.position.Set(MapSize.first-16, MapSize.second/2);
+		BDefB.position.Set(MapSize.first/2, MapSize.second-48);
+		auto BodyL = worldPTR->CreateBody(&BDefL);
+		auto BodyT = worldPTR->CreateBody(&BDefT);
+		auto BodyR = worldPTR->CreateBody(&BDefR);
+		auto BodyB = worldPTR->CreateBody(&BDefB);
+		b2PolygonShape ShapeL;
+		b2PolygonShape ShapeT;
+		b2PolygonShape ShapeR;
+		b2PolygonShape ShapeB;
+		ShapeL.SetAsBox(16, MapSize.second/2);
+		ShapeT.SetAsBox(MapSize.first/2, 16);
+		ShapeR.SetAsBox(16, MapSize.second/2);
+		ShapeB.SetAsBox(MapSize.first/2, 16);
+		BodyL->CreateFixture(&ShapeL, 0);
+		BodyT->CreateFixture(&ShapeT, 0);
+		BodyR->CreateFixture(&ShapeR, 0);
+		BodyB->CreateFixture(&ShapeB, 0);
+
 		auto levelPtr = MapSnapshot.getLevel(i);
 		for (auto obj : levelPtr->Objects) {
 			Position P = {obj.x, obj.y, i};

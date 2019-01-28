@@ -18,8 +18,8 @@ public:
 class Object {
 	protected:
 		b2Body* Body = nullptr;
-		int16_t LevelZCoordinate;
 	private:
+		int16_t LevelZCoordinate;
 		static std::map<std::string,ObjectFactory*>& getFactories(); //Singleton
 	public:
 		Position getPosition() const;
