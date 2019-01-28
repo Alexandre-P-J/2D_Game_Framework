@@ -11,7 +11,6 @@
 struct MapTile {
 	SDL_Texture* Texture = nullptr;
 	SDL_Rect SrcRect;
-	unsigned char Behaviour; //<0>=block, <1>=editable?...
 };
 
 struct MapObject {

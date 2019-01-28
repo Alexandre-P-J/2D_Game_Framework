@@ -85,8 +85,7 @@ void Map::Reload(const std::string& MapFile) {
 		std::string Path = pNode0->first_node("image")->first_attribute("source")->value();
 
 		SDL_Texture* texture = nullptr;
-		if (Path.find("Behaviour") == std::string::npos) //If texture has Behaviour in path, omit
-			texture = RS->GetTexture(Path);
+		texture = RS->GetTexture(Path);
 		LBoundTexture.push_back(std::make_tuple(firstgid, texture, tileWidth, tileHeight));
 		pNode0 = pNode0->next_sibling("tileset");
 	}
@@ -96,13 +95,10 @@ void Map::Reload(const std::string& MapFile) {
 	//Parsing Layers Step1: Filtering types of layers
 	pNode0 = pRoot->first_node("layer");
 	std::vector<xml_node<>*> TileTexures;
-	std::vector<xml_node<>*> TileBehaviours;
 	std::vector<xml_node<>*> TileObjects;
 	while (pNode0) {
 		std::string name = pNode0->first_attribute("name")->value();
-		if (name.find("Behaviour") != std::string::npos)
-			TileBehaviours.push_back(pNode0);
-		else if (name.find_first_not_of("-0123456789") == std::string::npos) {
+		if (name.find_first_not_of("-0123456789") == std::string::npos) {
 			TileTexures.push_back(pNode0);
 			minLevel = std::min(minLevel, stosi(name));
 		}
@@ -112,8 +108,7 @@ void Map::Reload(const std::string& MapFile) {
 	pNode0 = pRoot->first_node("objectgroup");
 	while (pNode0) {
 		std::string name = pNode0->first_attribute("name")->value();
-		if (name.find("Object") != std::string::npos)
-			TileObjects.push_back(pNode0);
+		TileObjects.push_back(pNode0);
 		pNode0 = pNode0->next_sibling("objectgroup");
 	}
 
@@ -159,29 +154,6 @@ void Map::Reload(const std::string& MapFile) {
 		Levels[index].Tiles = std::move(Tiles);
 	}
 
-	//Parsing Layers Step2.2: writing Behaviour in Levels vector
-	for (auto & element : TileBehaviours) {
-		int index = stosi(element->first_attribute("name")->value()) - minLevel; //stosi shall omit non numeric and non '-'
-		pNode0 = element->first_node("data")->first_node("tile");
-		for (int i = 0; pNode0; ++i) {
-			auto attr = pNode0->first_attribute("gid");
-			if (attr) {
-				int gid = stosi(attr->value());
-				int low = 0;
-				int high = LBoundTexture.size()-1;
-				while(low <= high) { //get texture pointer from gid
-					int mid = (low+high)/2;
-					if (std::get<0>(LBoundTexture[mid]) > gid)
-						high = mid - 1;
-					else
-						low = mid + 1;
-				}
-				int lbpos = std::max(0, low-1);
-				Levels[index].Tiles[i].Behaviour = gid - std::get<0>(LBoundTexture[lbpos]);
-			}
-			pNode0 = pNode0->next_sibling("tile");
-		}
-	}
 
 	//Parsing Objects
 	for (auto & element : TileObjects) {
