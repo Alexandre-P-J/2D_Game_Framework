@@ -60,11 +60,30 @@ Rotation Object::getRotation() const {
 
 void Object::setPosition(Position P) { //WIP, IF Z CHANGES WE ARE FKED
 	assert(Body); // this not ensures Body validity
-	b2Vec2 pos = {std::get<0>(P), std::get<1>(P)};
-	if (std::get<2>(P) == LevelZCoordinate)
+	if (std::get<2>(P) == LevelZCoordinate) {
+		b2Vec2 pos = {std::get<0>(P), std::get<1>(P)};
 		Body->SetTransform(pos, Body->GetAngle());
+	}
 	else {
-		assert("U FCKED, Body trasportation through worlds not yet implemented");
+		b2BodyDef BodyDef;
+		BodyDef.position.Set(std::get<0>(P), std::get<1>(P));
+		LevelZCoordinate = std::get<2>(P);
+		BodyDef.angle = Body->GetAngle();
+		BodyDef.type = Body->GetType();
+		auto NewBody = EngineUtils::getGame().lock()->getWorldFromLevel(std::get<2>(P))->CreateBody(&BodyDef);
+		auto fixtureList = Body->GetFixtureList();
+		while(fixtureList) {
+			b2FixtureDef FixtureDef;
+			FixtureDef.density = fixtureList->GetDensity();
+			FixtureDef.friction = fixtureList->GetFriction();
+			FixtureDef.restitution = fixtureList->GetRestitution();
+			FixtureDef.shape = fixtureList->GetShape();
+			NewBody->CreateFixture(&FixtureDef);
+			fixtureList = fixtureList->GetNext();
+		}
+
+		Body->GetWorld()->DestroyBody(Body);
+		Body = NewBody;
 	}
 }
 

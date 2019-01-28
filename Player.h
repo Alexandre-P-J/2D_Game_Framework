@@ -37,8 +37,8 @@ class Player : public Object {
 		void ON_KeyPressS(Uint8 state);
 		void ON_KeyPressD(Uint8 state);
 		void ON_KeyPressE(Uint8 state);
-		/*void ON_KeyPressArrowDown(Uint8 state);
-		void ON_KeyPressArrowUp(Uint8 state);*/
+		void ON_KeyPressArrowDown(Uint8 state);
+		void ON_KeyPressArrowUp(Uint8 state);
 };
 
 REGISTER_TYPE(Player)

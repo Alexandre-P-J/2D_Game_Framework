@@ -10,8 +10,8 @@ DebugEnemy::DebugEnemy(b2Body* Body) {
 	Shape.SetAsBox(16, 16);
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &Shape;
-	fixtureDef.density = 1;
-	fixtureDef.friction = 0.3;
+	fixtureDef.density = 10;
+	fixtureDef.friction = 1;
 	Body->CreateFixture(&fixtureDef);
 
 

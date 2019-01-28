@@ -22,10 +22,10 @@ Player::Player(b2Body* Body) {
 	Bindings.push_back(InputComponent->InputBind(SDLK_s, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressS)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_d, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressD)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_e, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressE)));
-	/*
+	
 	Bindings.push_back(InputComponent->InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_UP, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowUp)));
-	*/
+
 	auto texture = EngineUtils::getRenderComponent()->GetTexture("runner-export.png");
 	SDL_Rect first = {0, 0, 128, 128};
 	std::vector<float> v = {150, 100, 140, 150, 100, 140};
@@ -84,15 +84,20 @@ void Player::ON_KeyPressE(Uint8 state) {
 	if (state == SDL_PRESSED) {
 		Object::create("DebugEnemy", getPosition());
 	}
-}/*
+}
 void Player::ON_KeyPressArrowDown(Uint8 state) {
 	auto LevelIDinterval = EngineUtils::getGame().lock()->getMapLevelsInterval();
-	if (std::get<2>(P) > LevelIDinterval.first)
+	auto P = getPosition();
+	if (std::get<2>(P) > LevelIDinterval.first){
 		std::get<2>(P) -= 1;
+		setPosition(P);
+	}
 }
 void Player::ON_KeyPressArrowUp(Uint8 state) {
 	auto LevelIDinterval = EngineUtils::getGame().lock()->getMapLevelsInterval();
-	if (std::get<2>(P) < LevelIDinterval.second)
+	auto P = getPosition();
+	if (std::get<2>(P) < LevelIDinterval.second) {
 		std::get<2>(P) += 1;
+		setPosition(P);
+	}
 }
-*/

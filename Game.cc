@@ -7,11 +7,20 @@
 
 GamePhysics::GamePhysics() {}
 GamePhysics::GamePhysics(int minlevel, int Nlevels) :
-	WorldPerLevel(Nlevels, new b2World(b2Vec2(0, 0))), minlevel(minlevel) {}
+	WorldPerLevel(Nlevels, nullptr), minlevel(minlevel) {
+		for (int i = 0; i < Nlevels; ++i) {
+			auto g = b2Vec2(0, 0);
+			WorldPerLevel[i] = new b2World(g);
+		}
+	}
 
 void GamePhysics::Build(int minlevel, int Nlevels) {
 	this->minlevel = minlevel;
-	WorldPerLevel = std::vector<b2World*>(Nlevels, new b2World(b2Vec2(0, 0)));
+	WorldPerLevel = std::vector<b2World*>(Nlevels, nullptr);
+	for (int i = 0; i < Nlevels; ++i) {
+		auto g = b2Vec2(0, 0);
+		WorldPerLevel[i] = new b2World(g);
+	}
 }
 b2World* GamePhysics::operator[] (int x) {
 	return WorldPerLevel[x-minlevel];
