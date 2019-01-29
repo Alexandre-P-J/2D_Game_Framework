@@ -6,7 +6,7 @@
 
 class Player : public Object {
 		// General:
-		float WalkSpeed = 15;
+		float WalkSpeed = 200;
 		// Animations:
 		enum AnimationType {WalkF = 0, WalkR, WalkB, WalkL, IdleF, IdleR, IdleB,
 			IdleL, ANIMATION_COUNT};

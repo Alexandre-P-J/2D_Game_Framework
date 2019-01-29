@@ -12,6 +12,7 @@ DebugEnemy::DebugEnemy(b2Body* Body) {
 	fixtureDef.shape = &Shape;
 	fixtureDef.density = 10;
 	fixtureDef.friction = 1;
+	fixtureDef.restitution = 1;
 	Body->CreateFixture(&fixtureDef);
 
 

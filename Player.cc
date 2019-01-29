@@ -22,7 +22,7 @@ Player::Player(b2Body* Body) {
 	Bindings.push_back(InputComponent->InputBind(SDLK_s, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressS)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_d, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressD)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_e, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressE)));
-	
+
 	Bindings.push_back(InputComponent->InputBind(SDLK_DOWN, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowDown)));
 	Bindings.push_back(InputComponent->InputBind(SDLK_UP, fastdelegate::MakeDelegate(this, &Player::ON_KeyPressArrowUp)));
 
@@ -50,20 +50,23 @@ Movement();
 
 void Player::Movement() {
 	b2Vec2 Speed = {0, 0};
-	auto movement = WalkSpeed*EngineUtils::getDelta();
 	if (W_hold)
-		Speed.y -= movement;
+		Speed.y -= WalkSpeed;
 	if (A_hold)
-		Speed.x -= movement;
+		Speed.x -= WalkSpeed;
 	if (S_hold)
-		Speed.y += movement;
+		Speed.y += WalkSpeed;
 	if (D_hold)
-		Speed.x += movement;
+		Speed.x += WalkSpeed;
 	if (Speed.x || Speed.y) {
-		double angleInRadians = std::atan2(Speed.y, Speed.x);
+		float angleInRadians = std::atan2(Speed.y, Speed.x);
 		Rotation Rot;
 		Rot = (angleInRadians / M_PI) * 180.0 + 90;
 		setRotation(Rot);
+		// Speed magnitude correction
+		float m = std::sqrt(Speed.x*Speed.x + Speed.y*Speed.y);
+		Speed.x = std::abs(Speed.x) * Speed.x / m;
+		Speed.y = std::abs(Speed.y) * Speed.y / m;
 	}
 	Body->SetLinearVelocity(Speed);
 }

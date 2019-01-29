@@ -11,12 +11,14 @@
 
 class GamePhysics {
 	std::vector<b2World*> WorldPerLevel;
+	std::vector<float*> TimeAcumulators;
 	int minlevel;
 public:
 	GamePhysics();
 	GamePhysics(int minlevel, int Nlevels);
 	void Build(int minlevel, int Nlevels);
 	b2World* operator[] (int x);
+	float* TimeAcumulator (int x);
 };
 
 class Game {
@@ -35,7 +37,7 @@ class Game {
 		Game();
 
 		void Update();
-		std::vector<b2World*> getPhysicsToUpdate();
+		std::vector<std::pair<b2World*,float*>> getPhysicsToUpdate();
 
 		void MapSnapshotToWorkingMap();
 

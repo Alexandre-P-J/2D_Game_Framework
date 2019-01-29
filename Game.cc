@@ -7,20 +7,26 @@
 
 GamePhysics::GamePhysics() {}
 GamePhysics::GamePhysics(int minlevel, int Nlevels) :
-	WorldPerLevel(Nlevels, nullptr), minlevel(minlevel) {
+	WorldPerLevel(Nlevels, nullptr), TimeAcumulators(Nlevels, nullptr), minlevel(minlevel) {
 		for (int i = 0; i < Nlevels; ++i) {
 			auto g = b2Vec2(0, 0);
 			WorldPerLevel[i] = new b2World(g);
+			TimeAcumulators[i] = new float(0);
 		}
 	}
 
 void GamePhysics::Build(int minlevel, int Nlevels) {
 	this->minlevel = minlevel;
 	WorldPerLevel = std::vector<b2World*>(Nlevels, nullptr);
+	TimeAcumulators = std::vector<float*>(Nlevels, nullptr);
 	for (int i = 0; i < Nlevels; ++i) {
 		auto g = b2Vec2(0, 0);
 		WorldPerLevel[i] = new b2World(g);
+		TimeAcumulators[i] = new float(0.f);
 	}
+}
+float* GamePhysics::TimeAcumulator(int x) {
+	return TimeAcumulators[x-minlevel];
 }
 b2World* GamePhysics::operator[] (int x) {
 	return WorldPerLevel[x-minlevel];
@@ -105,8 +111,8 @@ std::pair<int,int> Game::getMapLevelsInterval() const {
 	return std::make_pair(MapSnapshot.getMinLevel(), MapSnapshot.getMaxLevel());
 }
 
-std::vector<b2World*> Game::getPhysicsToUpdate() {
-	std::vector<b2World*> result;
+std::vector<std::pair<b2World*,float*>> Game::getPhysicsToUpdate() {
+	std::vector<std::pair<b2World*,float*>> result;
 	result.reserve(Players.size());
 	std::set<int> checkin;
 	for (auto player : Players) {
@@ -114,7 +120,7 @@ std::vector<b2World*> Game::getPhysicsToUpdate() {
 		if (sptr) {
 			int Z = std::get<2>(sptr->getPosition());
 			if (checkin.find(Z) == checkin.end()) {
-				result.push_back(WorkingMap[Z]);
+				result.push_back(std::make_pair(WorkingMap[Z], WorkingMap.TimeAcumulator(Z)));
 				checkin.insert(Z);
 			}
 		}

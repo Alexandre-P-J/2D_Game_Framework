@@ -7,6 +7,15 @@
 #include <vector>
 #include <memory>
 
+struct EngineConfig {
+	int WsizeX = 2048;
+	int WsizeY = 1024;
+	int FPSlimit = 144;
+	const float PhysicsTimeStep = 1/300.f;
+	const int PhysicsVelocityIterations = 8;
+	const int PhysicsPositionIterations = 2;
+};
+
 namespace EngineUtils {
 	const float getDelta();
 	RenderComponent* getRenderComponent();
@@ -22,7 +31,6 @@ class Engine {
 	RenderComponent Renderer;
 	InputComponent Input;
 	std::shared_ptr<Game> GameComponent;
-
 
 	// RUNTIME INFO:
 	bool Running = true;

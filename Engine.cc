@@ -41,6 +41,7 @@ void Engine::ONWindowResize() {
 	std::cout << "Resizee" << std::endl;
 }
 
+
 int Engine::Run() {
 	GameComponent->MapSnapshotToWorkingMap();
 	do {
@@ -48,19 +49,21 @@ int Engine::Run() {
 		auto frame_start = std::chrono::steady_clock::now();
 		//GAME UPDATE
 		GameComponent->Update();
-		//PHYSICS
+		//PHYSICS UPDATE
 		auto Worlds = GameComponent->getPhysicsToUpdate();
-		float timeStep = 1.0 / 60;
-        int velocityIterations = 6;
-        int positionIterations = 2;
 		for (auto World : Worlds) {
-			World->Step(timeStep, velocityIterations, positionIterations);
+			float TimeAcumulator = *(World.second) + deltaTime/1000;
+			while (TimeAcumulator >= config.PhysicsTimeStep) {
+				(World.first)->Step(config.PhysicsTimeStep, config.PhysicsVelocityIterations, config.PhysicsPositionIterations);
+				TimeAcumulator -= config.PhysicsTimeStep;
+			}
+			*(World.second) = TimeAcumulator;
 		}
 		//DRAW
 		Renderer.Draw();
 		// INPUT
 		Input.Run();
-		// FRAME TIME END, DO ADJUSTMENTS
+		// FRAME TIME END, DO ADJUSTMENT IF NEEDED
 		std::chrono::duration<double> frame_timelength;
 		do {
 			std::this_thread::sleep_for(std::chrono::microseconds(100));
