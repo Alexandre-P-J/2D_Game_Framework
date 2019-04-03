@@ -22,11 +22,9 @@ IF (WIN32)
 	endif ()
 
 	include_directories(include ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
-
 	file(GLOB SOURCES "src/*.cpp")
 
 	add_executable(game.x ${SOURCES})
-
 	target_link_libraries(game.x ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 ELSE()
@@ -35,13 +33,12 @@ ELSE()
 	
 	find_package(SDL2 REQUIRED)
 	find_package(SDL2_image REQUIRED)
-	find_package(Box2D REQUIRED)
-	
+	set(Box2D_LIBRARY "${CMAKE_SOURCE_DIR}/lib/Linux/libBox2D.a")
+
 	include_directories(include ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS})
-	
 	file(GLOB SOURCES "src/*.cpp")
 
-	add_executable(game.x ${SOURCES})	
-	target_link_libraries(game.x ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
+	add_executable(game.x ${SOURCES})
+	target_link_libraries(game.x ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${Box2D_LIBRARY})
 
 ENDIF()
