@@ -1,5 +1,8 @@
 #include "Engine.h"
-#include "multiplatform_SDL2.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
+
+#undef main
 
 
 int main() {

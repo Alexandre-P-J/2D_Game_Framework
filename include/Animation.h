@@ -1,5 +1,5 @@
 #pragma once
-#include "multiplatform_SDL2.h"
+#include "SDL2/SDL_image.h"
 #include <vector>
 #include <utility>
 #include <queue>

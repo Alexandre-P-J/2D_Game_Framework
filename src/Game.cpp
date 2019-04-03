@@ -49,10 +49,10 @@ void Game::MapSnapshotToWorkingMap() {
 		b2BodyDef BDefT;
 		b2BodyDef BDefR;
 		b2BodyDef BDefB;
-		BDefL.position.Set(-16, MapSize.second/2);
-		BDefT.position.Set(MapSize.first/2, -16);
-		BDefR.position.Set(MapSize.first-16, MapSize.second/2);
-		BDefB.position.Set(MapSize.first/2, MapSize.second-48);
+		BDefL.position.Set(-16.0f, float(MapSize.second)/2.0f);
+		BDefT.position.Set(float(MapSize.first)/2.0f, -16.0f);
+		BDefR.position.Set(float(MapSize.first-16), float(MapSize.second)/2.0f);
+		BDefB.position.Set(float(MapSize.first)/2.0f, float(MapSize.second-48));
 		auto BodyL = worldPTR->CreateBody(&BDefL);
 		auto BodyT = worldPTR->CreateBody(&BDefT);
 		auto BodyR = worldPTR->CreateBody(&BDefR);
@@ -61,10 +61,10 @@ void Game::MapSnapshotToWorkingMap() {
 		b2PolygonShape ShapeT;
 		b2PolygonShape ShapeR;
 		b2PolygonShape ShapeB;
-		ShapeL.SetAsBox(16, MapSize.second/2);
-		ShapeT.SetAsBox(MapSize.first/2, 16);
-		ShapeR.SetAsBox(16, MapSize.second/2);
-		ShapeB.SetAsBox(MapSize.first/2, 16);
+		ShapeL.SetAsBox(16.0f, float(MapSize.second)/2.0f);
+		ShapeT.SetAsBox(float(MapSize.first)/2.0f, 16.0f);
+		ShapeR.SetAsBox(16.0f, float(MapSize.second)/2.0f);
+		ShapeB.SetAsBox(float(MapSize.first)/2.0f, 16.0f);
 		BodyL->CreateFixture(&ShapeL, 0);
 		BodyT->CreateFixture(&ShapeT, 0);
 		BodyR->CreateFixture(&ShapeR, 0);
@@ -72,13 +72,13 @@ void Game::MapSnapshotToWorkingMap() {
 
 		auto levelPtr = MapSnapshot.getLevel(i);
 		for (auto obj : levelPtr->Objects) {
-			Position P = {obj.x, obj.y, i};
+			Position P = {float(obj.x), float(obj.y), i};
 			Object::create(obj.type, P, obj.ID);
 		}
 	}
 }
 
-std::weak_ptr<Object> Game::getPlayer(int id) {
+std::weak_ptr<Object> Game::getPlayer(unsigned int id) {
 	if (id < Players.size() && id >= 0)
 		return Players[id];
 	return std::weak_ptr<Object>();

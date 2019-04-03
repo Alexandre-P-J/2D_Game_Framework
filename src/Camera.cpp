@@ -4,7 +4,7 @@
 #include <iostream>
 
 Camera::Camera() {
-	Info.P = Position(0, 0, -1);
+	Info.P = Position(0.0f, 0.0f, -1);
 	Info.HorizontalPx = 0;
 	Info.VerticalPx = 0;
 	Info.Zoom = 1;
@@ -41,15 +41,15 @@ bool Camera::CanSeeObject(const Object& Obj) {
 void Camera::Update(const Position PlayerPos, int HorizontalPx, int VerticalPx, uint32_t MapWidthpx, uint32_t MapHeightpx) {
 	Info.HorizontalPx = HorizontalPx;
 	Info.VerticalPx = VerticalPx;
-	int y = std::get<1>(PlayerPos) - (VerticalPx/2);
+	float y = std::get<1>(PlayerPos) - (VerticalPx/2);
 	if (y < 0)
 		y = 0;
 	if (y+VerticalPx >= MapHeightpx-64)
-		y = MapHeightpx-VerticalPx-64;
-	int x = std::get<0>(PlayerPos) - (HorizontalPx/2);
+		y = float(MapHeightpx-VerticalPx-64);
+	float x = std::get<0>(PlayerPos) - (HorizontalPx/2);
 	if (x < 0)
 		x = 0;
 	if (x+HorizontalPx >= MapWidthpx-32)
-		x = MapWidthpx-HorizontalPx-32;
+		x = float(MapWidthpx-HorizontalPx-32);
 	Info.P = std::make_tuple(x, y, std::get<2>(PlayerPos));
 }

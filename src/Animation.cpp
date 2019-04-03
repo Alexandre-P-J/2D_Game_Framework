@@ -48,7 +48,7 @@ std::pair<int,int> Animation::UpdateSize() {
 		auto XresizeTime = task.second;
 		if (finalXsize != currentXsize) {
 			if (XresizeTime > Delta) {
-				int dx = std::round((finalXsize - currentXsize) / (XresizeTime/Delta));
+				int dx = int(std::round((finalXsize - currentXsize) / (XresizeTime/Delta)));
 				currentXsize += dx;
 				XresizeTime -= Delta;
 			}
@@ -68,7 +68,7 @@ std::pair<int,int> Animation::UpdateSize() {
 		auto YresizeTime = task.second;
 		if (finalYsize != currentYsize) {
 			if (YresizeTime > Delta) {
-				int dy = std::round((finalYsize - currentYsize) / (YresizeTime/Delta));
+				int dy = int(std::round((finalYsize - currentYsize) / (YresizeTime/Delta)));
 				currentYsize += dy;
 				YresizeTime -= Delta;
 			}

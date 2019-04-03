@@ -42,7 +42,7 @@ class Game {
 		void MapSnapshotToWorkingMap();
 
 		b2World* getWorldFromLevel(int z);
-		std::weak_ptr<Object> getPlayer(int id);
+		std::weak_ptr<Object> getPlayer(unsigned int id);
 		std::pair<uint32_t,uint32_t> getMapSize(const int z) const;
 		std::pair<int,int> getMapLevelsInterval() const;
 };

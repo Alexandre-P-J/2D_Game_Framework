@@ -70,7 +70,7 @@ int Engine::Run() {
 			frame_timelength = (std::chrono::steady_clock::now() - frame_start)*1000;
 		}
 		while (frame_timelength.count() < 1000/(float)(config.FPSlimit));
-		deltaTime = frame_timelength.count();
+		deltaTime = float(frame_timelength.count());
 	}
 	while (Running);
 	return 0;

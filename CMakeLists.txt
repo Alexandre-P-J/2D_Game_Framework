@@ -4,7 +4,7 @@ project(Game)
 
 IF (WIN32)
 
-	set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/lib/Windows/SDL2/include")
+	set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/lib/Windows/SDL2")
 	# Support both 32 and 64 bit
 	if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
 		set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/Windows/SDL2/lib/x64/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/Windows/SDL2/lib/x64/SDL2main.lib")
@@ -13,7 +13,7 @@ IF (WIN32)
 	endif ()
 
 
-	set(SDL2_IMAGE_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/lib/Windows/SDL2_image/include")
+	set(SDL2_IMAGE_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/lib/Windows/SDL2_image")
 	# Support both 32 and 64 bit
 	if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
 		set(SDL2_IMAGE_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/Windows/SDL2_image/lib/x64/SDL2_image.lib")
@@ -21,11 +21,15 @@ IF (WIN32)
 		set(SDL2_IMAGE_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/Windows/SDL2_image/lib/x86/SDL2_image.lib")
 	endif ()
 
-	include_directories(include ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+	set(Box2D_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/lib/Windows/Box2D")
+	set(Box2D_LIBRARY "${CMAKE_SOURCE_DIR}/lib/Windows/Box2D/Box2D.lib")
+	set(RapidXML_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/lib/Multiplatform/rapidxml")	
+
+	include_directories(include ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${Box2D_INCLUDE_DIR} ${RapidXML_INCLUDE_DIR})
 	file(GLOB SOURCES "src/*.cpp")
 
 	add_executable(game.x ${SOURCES})
-	target_link_libraries(game.x ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+	target_link_libraries(game.x ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${Box2D_LIBRARY})
 
 ELSE()
 
