@@ -34,8 +34,9 @@ ELSE()
 	find_package(SDL2 REQUIRED)
 	find_package(SDL2_image REQUIRED)
 	set(Box2D_LIBRARY "${CMAKE_SOURCE_DIR}/lib/Linux/libBox2D.a")
+	set(RapidXML_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/lib/Multiplatform/rapidxml")
 
-	include_directories(include ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS})
+	include_directories(include ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${RapidXML_INCLUDE_DIR})
 	file(GLOB SOURCES "src/*.cpp")
 
 	add_executable(game.x ${SOURCES})
