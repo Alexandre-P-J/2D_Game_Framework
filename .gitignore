@@ -16,4 +16,7 @@
 *.x
 
 # Editor Folders
-/.vscode
+.vscode/
+
+# Build Folder
+build/
