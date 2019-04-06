@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7)
 project(Game)
 
-IF (WIN32)
+IF (WIN32) # WINDOWS
 
 	set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2/Windows")
 	# Support both 32 and 64 bit
@@ -23,14 +23,23 @@ IF (WIN32)
 	set(Box2D_LIBRARY "${CMAKE_SOURCE_DIR}/libraries/Box2D/Box2D.lib")
 	set(RapidXML_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/libraries/rapidxml")
 
-ELSE()
+ELSE() # LINUX
 
 	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Linux")
-	
-	find_package(SDL2 REQUIRED)
-	find_package(SDL2_image REQUIRED)
+	IF (${BITS} MATCHES "64")
+		set(SDL2_LIBRARY "/usr/lib/libSDL2.so")
+		set(SDL2_IMAGE_LIBRARIES "/usr/lib/libSDL2_image.so")
+		set(Box2D_LIBRARY "${CMAKE_SOURCE_DIR}/libraries/Box2D/lib/libBox2D.a")
+	ELSE()
+		message(WARNING "Did you remember to set the BITS variable? - 32bit selected (default) ...")
+		set(SDL2_LIBRARY "/usr/lib32/libSDL2.so")
+		set(SDL2_IMAGE_LIBRARIES "/usr/lib32/libSDL2_image.so")
+		set(Box2D_LIBRARY "${CMAKE_SOURCE_DIR}/libraries/Box2D/lib32/libBox2D.a")
+		set(CMAKE_CXX_FLAGS "-m32")
+		set(CMAKE_EXE_LINKER_FLAGS "-m32")
+	ENDIF()
+
 	set(Box2D_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/libraries/Box2D")
-	set(Box2D_LIBRARY "${CMAKE_SOURCE_DIR}/libraries/Box2D/libBox2D.a")
 	set(RapidXML_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/libraries/rapidxml")
 	
 ENDIF()
