@@ -1,4 +1,6 @@
-# 2D Game Engine
+# 2D Game Engine (Framework)
+
+This framework its at an early state, not yet usable for its purpose. See [To_Do](https://github.com/EvilPyro/2D_GameEngine/blob/master/TODO.md)
 
 ### Installation
   - Game code under game/src and game/include
