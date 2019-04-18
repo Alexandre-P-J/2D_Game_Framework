@@ -1,4 +1,4 @@
-# 2D Game Engine (Framework)
+# 2D Game Framework
 
 This framework its at an early state, not yet usable for its purpose. See [To_Do](https://github.com/EvilPyro/2D_GameEngine/blob/master/TODO.md).
 Do not use this Framework in production.
